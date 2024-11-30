@@ -30,4 +30,10 @@ public class connectionController {
             System.out.println("herllo");
         }
     }
+    
+    public void get()
+    {
+        // MODEL <- QUERY "SELECT ALL "
+        
+    }
 }
