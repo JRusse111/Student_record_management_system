@@ -27,6 +27,7 @@ public class connectionController {
             Connection con = DriverManager.getConnection(DBConnection.getUrl(),DBConnection.getUser(), DBConnection.getPass());
         }catch(SQLException e){
             System.out.println("Erorr Accured: " + e);
+            System.out.println("herllo");
         }
     }
 }
