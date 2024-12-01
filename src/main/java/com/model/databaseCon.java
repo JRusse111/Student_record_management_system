@@ -33,4 +33,5 @@ public class databaseCon {
     public String getCreateStudentRecordTable(){return "CREATE TABLE IF NOT EXISTS studentrecord (id INT AUTO_INCREMENT PRIMARY KEY, schoolid VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, section VARCHAR(255) NOT NULL,course VARCHAR(255) NOT NULL)";}
     public String getCreateStudentAccountTable(){return "CREATE TABLE IF NOT EXISTS studentaccount (id INT AUTO_INCREMENT PRIMARY KEY, schoolid VARCHAR(255) NOT NULL, section VARCHAR(255) NOT NULL,course VARCHAR(255) NOT NULL)";}
 //    public String getCreateStudentShowTable(){return "CREATE TABLE IF NOT EXISTS studentaccount (name int NOT NULL, )";}  CREATE A PROPER SHOW TABlE
+    //REVISiopNTEST
 }
