@@ -10,8 +10,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  * @author LordD
  */
@@ -27,7 +25,7 @@ public class connectionController {
         } catch (ClassNotFoundException e) {
             System.out.print(e + "Driver Cannot be found");
         }
-        
+        // CONNECT TO DATABASE
         try{
             con = DriverManager.getConnection(DBConnection.getUrl(),DBConnection.getUser(), DBConnection.getPass());
             
@@ -42,19 +40,12 @@ public class connectionController {
             System.out.println("Erorr Accured: " + e);
         }
         
-        
-        
-        try {
-            System.out.println(databaseExist(DBConnection, con));
-        } catch (SQLException ex) {
-            Logger.getLogger(connectionController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
     }
     
     private static boolean databaseExist(databaseCon DBConnection, Connection con)
     throws SQLException
     {
+        // CHECK IF DATABASE EXIST
         try(PreparedStatement preparedStatement = con.prepareStatement(DBConnection.getCheckDB()))
         {
             preparedStatement.setString(1, DBConnection.getDbname());
@@ -94,10 +85,10 @@ public class connectionController {
             preparedStatement.executeUpdate();
         }
         //CREATE STUDENT ACCOUNT TABLE
-        try(PreparedStatement preparedStatement = con.prepareStatement(DBConnection.getCreateStudentAccountTable()))
-        {
-            preparedStatement.executeUpdate();
-        }
+//        try(PreparedStatement preparedStatement = con.prepareStatement(DBConnection.getCreateStudentAccountTable()))
+//        {
+//            preparedStatement.executeUpdate();
+//        }
         //CREATE STUDENT RECORD TABLE
         try(PreparedStatement preparedStatement = con.prepareStatement(DBConnection.getCreateStudentRecordTable()))
         {
