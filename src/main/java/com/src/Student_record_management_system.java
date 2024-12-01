@@ -3,7 +3,7 @@
  */
 
 package com.src;
-import com.src.control.connectionController;
+import com.control.connectionController;
 /**
  *
  * @author LordD
