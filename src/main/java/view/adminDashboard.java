@@ -2,20 +2,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.view;
-import com.control.dashboardController;
+package view;
+import control.connectionController;
+import model.studentRecord;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
 /**
  *
  * @author LordD
  */
 public class adminDashboard extends javax.swing.JFrame {
-    dashboardController dashboardC = new dashboardController();
     
     /**
      * Creates new form adminDashboard
      */
     public adminDashboard() {
         initComponents();
+        
+        // CONNECT TO DATABASE
+        connectionController conn = new connectionController();
+        conn.DBconnect();
+        
+        updateTable();
     }
 
     /**
@@ -48,15 +56,30 @@ public class adminDashboard extends javax.swing.JFrame {
 
         recordTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "FIRSTNAME", "LASTNAME", "SECTION", "COURSE"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         recordScrollTable.setViewportView(recordTable);
 
         addBTN.setText("ADD");
@@ -79,14 +102,11 @@ public class adminDashboard extends javax.swing.JFrame {
 
         sectionCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        idTField.setText("ID");
         idTField.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 idTFieldMouseClicked(evt);
             }
         });
-
-        nameTField.setText("Name");
 
         courseCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -208,42 +228,27 @@ public class adminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_clearBTNActionPerformed
 
     private void idTFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_idTFieldMouseClicked
-        dashboardC.TFieldActionPerformed(idTField);
+        
     }//GEN-LAST:event_idTFieldMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(adminDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(adminDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(adminDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(adminDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    // VIEW FUNCTION HERE!
+    public void updateTable()
+    {
+        DefaultTableModel dTable = (DefaultTableModel) recordTable.getModel();
+        dTable.setRowCount(0);
+        connectionController CC = new connectionController();
+        
+        List<studentRecord> sRecord = CC.fetchrecordtable("T");
+        for(studentRecord record : sRecord)
+        {
+            String schoolid = record.getSchoolid();
+            String firstname = record.getFirstname();
+            String lastname = record.getLastname();
+            String section = record.getSection();
+            String course = record.getCourse();
+            
+            dTable.addRow(new Object[] {schoolid, firstname, lastname, section, course});
         }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new adminDashboard().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
