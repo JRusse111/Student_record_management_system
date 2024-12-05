@@ -1,23 +1,27 @@
 CREATE DATABASE recordmanagementsystem;
 USE recordmanagementsystem;
+
 CREATE TABLE IF NOT EXISTS adminaccount (id INT AUTO_INCREMENT PRIMARY KEY, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, session char(1) DEFAULT 'T');
-CREATE TABLE IF NOT EXISTS studentsection (id INT AUTO_INCREMENT PRIMARY KEY, course VARCHAR(255));
-CREATE TABLE IF NOT EXISTS studentcourse (id INT AUTO_INCREMENT PRIMARY KEY, section VARCHAR(255));
+CREATE TABLE IF NOT EXISTS studentsection (id INT AUTO_INCREMENT PRIMARY KEY, section VARCHAR(255));
+CREATE TABLE IF NOT EXISTS studentcourse (id INT AUTO_INCREMENT PRIMARY KEY, course VARCHAR(255));
 CREATE TABLE IF NOT EXISTS studentrecord (
-         id INT AUTO_INCREMENT PRIMARY KEY,
-         schoolid VARCHAR(255) NOT NULL,
-         firstname VARCHAR(255) NOT NULL,
-         lastname VARCHAR(255) NOT NULL,
-         section INT NOT NULL,
-         course INT NOT NULL,
-         status CHAR(1) DEFAULT 'T',
-         FOREIGN KEY (section) REFERENCES studentsection(id) ON DELETE CASCADE,
-         FOREIGN KEY (course) REFERENCES studentcourse(id) ON DELETE CASCADE
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    schoolid VARCHAR(255) NOT NULL UNIQUE,
+    firstname VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    section INT NOT NULL,
+    course INT NOT NULL,
+    status CHAR(1) DEFAULT 'T',
+    FOREIGN KEY (section) REFERENCES studentsection(id) ON DELETE CASCADE,
+    FOREIGN KEY (course) REFERENCES studentcourse(id) ON DELETE CASCADE
 );
+
 CREATE TABLE IF NOT EXISTS studentaccount (id INT AUTO_INCREMENT PRIMARY KEY, lastname varchar(255) NOT NULL, studentid varchar(255) NOT NULL, session char(1) DEFAULT 'F');
 
 INSERT INTO studentsection values(default, '21A1'), (default, '21M1');
 INSERT INTO studentcourse values(default, 'BSCS');
 INSERT INTO adminaccount values(default, 'lorddrake', 'baza', default);
 INSERT INTO studentaccount values(default, 'lorddrake', '2021-48776', DEFAULT),(default, 'Dalma', '2023-54400', DEFAULT);
-INSERT INTO studentrecord values(default, '2021-48776', 'lorddrake', 'baza', 1,1, default), (default, '2023-54400', 'SheaneLyka', 'Dalma', 1,1, default);
+
+INSERT INTO studentrecord values(default, '2021-48776', 'lorddrake', 'baza', 1,1, default), (default, '2023-54400', 'SheaneLyka', 'Dalma', 1,1, default),  values(default, '2023-53284', 'Venedict', 'Luceno' 2,1, default);
+

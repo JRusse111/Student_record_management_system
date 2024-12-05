@@ -9,5 +9,22 @@ package model;
  * @author LordD
  */
 public class studentSection {
+    private int id;
+    private String section;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setSection(String section) {
+        this.section = section;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public String getSection() {
+        return section;
+    }
     
 }

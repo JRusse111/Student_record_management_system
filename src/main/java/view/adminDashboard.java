@@ -3,8 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
+
 import control.connectionController;
 import model.studentRecord;
+import model.studentCourse;
+import model.studentSection;
+
+
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 /**
@@ -23,7 +28,11 @@ public class adminDashboard extends javax.swing.JFrame {
         connectionController conn = new connectionController();
         conn.DBconnect();
         
+        existErrorMessage.setVisible(false);
+        fillErrorMessage.setVisible(false);
         updateTable();
+        updateCoursebox();
+        updateSectionbox();
     }
 
     /**
@@ -45,12 +54,17 @@ public class adminDashboard extends javax.swing.JFrame {
         clearBTN = new javax.swing.JButton();
         sectionCBox = new javax.swing.JComboBox<>();
         idTField = new javax.swing.JTextField();
-        nameTField = new javax.swing.JTextField();
+        firstnameTField = new javax.swing.JTextField();
         courseCBox = new javax.swing.JComboBox<>();
         insertNameLabel = new javax.swing.JLabel();
         insertIdLabel = new javax.swing.JLabel();
         sectionLabel = new javax.swing.JLabel();
         courseLabel = new javax.swing.JLabel();
+        lastnameTField = new javax.swing.JTextField();
+        lastnameLabel = new javax.swing.JLabel();
+        studentRecordTitle = new javax.swing.JLabel();
+        existErrorMessage = new javax.swing.JLabel();
+        fillErrorMessage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,9 +94,21 @@ public class adminDashboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        recordTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                recordTableMouseClicked(evt);
+            }
+        });
         recordScrollTable.setViewportView(recordTable);
 
         addBTN.setText("ADD");
+        addBTN.setMaximumSize(new java.awt.Dimension(75, 23));
+        addBTN.setMinimumSize(new java.awt.Dimension(75, 23));
+        addBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBTNActionPerformed(evt);
+            }
+        });
 
         deleteBTN.setText("DELETE");
         deleteBTN.addActionListener(new java.awt.event.ActionListener() {
@@ -96,19 +122,9 @@ public class adminDashboard extends javax.swing.JFrame {
         clearBTN.setText("CLEAR");
         clearBTN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                clearBTNActionPerformed(evt);
+                clearForm(evt);
             }
         });
-
-        sectionCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        idTField.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                idTFieldMouseClicked(evt);
-            }
-        });
-
-        courseCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         insertNameLabel.setText("INSERT NAME");
 
@@ -118,64 +134,93 @@ public class adminDashboard extends javax.swing.JFrame {
 
         courseLabel.setText("COURSE");
 
+        lastnameLabel.setText("INSERT LASTNAME");
+
+        studentRecordTitle.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        studentRecordTitle.setText("STUDENT RECORD");
+
+        existErrorMessage.setForeground(new java.awt.Color(204, 0, 51));
+        existErrorMessage.setText("ID Already Exist!");
+
+        fillErrorMessage.setForeground(new java.awt.Color(204, 0, 51));
+        fillErrorMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        fillErrorMessage.setText("Fill in all the data");
+
         javax.swing.GroupLayout DetailPanelLayout = new javax.swing.GroupLayout(DetailPanel);
         DetailPanel.setLayout(DetailPanelLayout);
         DetailPanelLayout.setHorizontalGroup(
             DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(DetailPanelLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
+                .addGap(14, 14, 14)
                 .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(DetailPanelLayout.createSequentialGroup()
-                        .addComponent(sectionCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lastnameLabel)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DetailPanelLayout.createSequentialGroup()
                         .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(nameTField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fillErrorMessage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(DetailPanelLayout.createSequentialGroup()
+                                .addComponent(courseLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(sectionLabel))
+                            .addComponent(lastnameTField)
+                            .addComponent(firstnameTField, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(idTField)
                             .addGroup(DetailPanelLayout.createSequentialGroup()
-                                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(addBTN)
-                                    .addComponent(updateBTN))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(updateBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(DetailPanelLayout.createSequentialGroup()
+                                        .addGap(2, 2, 2)
+                                        .addComponent(existErrorMessage))
+                                    .addComponent(addBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(clearBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(deleteBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(43, 43, 43))
-                    .addGroup(DetailPanelLayout.createSequentialGroup()
-                        .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(courseLabel)
-                            .addComponent(sectionLabel)
+                                    .addComponent(deleteBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(studentRecordTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, DetailPanelLayout.createSequentialGroup()
+                                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(insertIdLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(insertNameLabel, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(DetailPanelLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(insertNameLabel))
-                            .addComponent(courseCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(DetailPanelLayout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(insertIdLabel)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(sectionCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(courseCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(31, 31, 31))))
         );
         DetailPanelLayout.setVerticalGroup(
             DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DetailPanelLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addContainerGap()
+                .addComponent(studentRecordTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(insertIdLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(idTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(insertNameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nameTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(sectionLabel)
+                .addComponent(firstnameTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lastnameLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sectionCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(courseLabel)
-                .addGap(10, 10, 10)
-                .addComponent(courseCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lastnameTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addBTN)
+                    .addComponent(courseLabel)
+                    .addComponent(sectionLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sectionCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(courseCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fillErrorMessage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(existErrorMessage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addBTN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(deleteBTN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -192,7 +237,7 @@ public class adminDashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(DetailPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordScrollTable, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(recordScrollTable, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         BackgroundLayout.setVerticalGroup(
@@ -220,16 +265,83 @@ public class adminDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBTNActionPerformed
-        // TODO add your handling code here:
+        if(isFormEmpty())
+        {
+            fillErrorMessage.setVisible(true);
+            return;
+        }
+        System.out.println("asd");
+        connectionController CC = new connectionController();
+        int selectedRow = recordTable.getSelectedRow();
+        if(selectedRow != -1){
+            String studentId = (String) recordTable.getValueAt(selectedRow,0);
+            CC.removeFromtable(studentId);
+        }
+        updateTable();
+        fillErrorMessage.setVisible(false);
     }//GEN-LAST:event_deleteBTNActionPerformed
 
-    private void clearBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBTNActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_clearBTNActionPerformed
+    private void clearForm(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearForm
+        clearForm();
+    }//GEN-LAST:event_clearForm
+    //TABLE CLIKCED
+    private void recordTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recordTableMouseClicked
+        int selectedRow = recordTable.getSelectedRow();
+        if(selectedRow != -1){
+            idTField.setText((String) recordTable.getValueAt(selectedRow,0));
+            firstnameTField.setText((String) recordTable.getValueAt(selectedRow,1));
+            lastnameTField.setText((String) recordTable.getValueAt(selectedRow, 2));
+            String selectedSection = (String) recordTable.getValueAt(selectedRow, 3);
+            String selectedCourse = (String) recordTable.getValueAt(selectedRow, 4);
+            for (int i = 0; i < courseCBox.getItemCount(); i++) {
+                if (courseCBox.getItemAt(i).equals(selectedCourse)) {
+                    courseCBox.setSelectedIndex(i);
+                    break; 
+                }
+            }
+            for (int i = 0; i < sectionCBox.getItemCount(); i++) {
+//                System.out.println(sectionCBox.getItemAt(i) + " | " + selectedSection);
+                if (sectionCBox.getItemAt(i).equals(selectedSection)) {
+                    sectionCBox.setSelectedIndex(i);
+                    break; 
+                }
+            }
+        }
+    }//GEN-LAST:event_recordTableMouseClicked
 
-    private void idTFieldMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_idTFieldMouseClicked
-        
-    }//GEN-LAST:event_idTFieldMouseClicked
+    private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
+        //CHECK IF EMTY
+        if(isFormEmpty())
+        {
+            fillErrorMessage.setVisible(true);
+            return;
+        }
+        connectionController CC = new connectionController();
+        List<studentRecord> records = CC.fetchrecordtable("T");
+        boolean exists = false;
+
+        for (studentRecord record : records) {
+            if (record.getSchoolid().equals(idTField.getText())) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (exists) {
+//            System.out.println("ERROR");
+            existErrorMessage.setVisible(true);
+        } else {
+            CC.insertIntoTable(idTField.getText(), 
+                    firstnameTField.getText(), 
+                    lastnameTField.getText(),
+                    sectionCBox.getSelectedIndex(), 
+                    courseCBox.getSelectedIndex()
+            );
+            clearForm();
+        }
+        updateTable();
+        fillErrorMessage.setVisible(false);
+    }//GEN-LAST:event_addBTNActionPerformed
 
     // VIEW FUNCTION HERE!
     public void updateTable()
@@ -237,7 +349,7 @@ public class adminDashboard extends javax.swing.JFrame {
         DefaultTableModel dTable = (DefaultTableModel) recordTable.getModel();
         dTable.setRowCount(0);
         connectionController CC = new connectionController();
-        
+
         List<studentRecord> sRecord = CC.fetchrecordtable("T");
         for(studentRecord record : sRecord)
         {
@@ -246,9 +358,44 @@ public class adminDashboard extends javax.swing.JFrame {
             String lastname = record.getLastname();
             String section = record.getSection();
             String course = record.getCourse();
-            
+
             dTable.addRow(new Object[] {schoolid, firstname, lastname, section, course});
         }
+    }
+    
+    public void updateCoursebox()
+    {
+        connectionController CC = new connectionController();
+        List<studentCourse> courses = CC.fetchstudentcourse();
+        
+        for(studentCourse course : courses)
+        {
+            courseCBox.addItem(course.getCourse());
+        }
+    }
+    public void updateSectionbox()
+    {
+        connectionController CC = new connectionController();
+        List<studentSection> sections = CC.fetchstudentsection();
+        
+        for(studentSection section : sections)
+        {
+            sectionCBox.addItem(section.getSection());
+        }
+    }
+    
+    private void clearForm()
+    {
+        idTField.setText("");
+        firstnameTField.setText("");
+        lastnameTField.setText("");
+        sectionCBox.setSelectedIndex(0); 
+        courseCBox.setSelectedIndex(0);
+    }
+    
+    private boolean isFormEmpty()
+    {
+        return idTField.getText().equals("") || firstnameTField.getText().equals("") || lastnameTField.getText().equals("");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -259,14 +406,19 @@ public class adminDashboard extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> courseCBox;
     private javax.swing.JLabel courseLabel;
     private javax.swing.JButton deleteBTN;
+    private javax.swing.JLabel existErrorMessage;
+    private javax.swing.JLabel fillErrorMessage;
+    private javax.swing.JTextField firstnameTField;
     private javax.swing.JTextField idTField;
     private javax.swing.JLabel insertIdLabel;
     private javax.swing.JLabel insertNameLabel;
-    private javax.swing.JTextField nameTField;
+    private javax.swing.JLabel lastnameLabel;
+    private javax.swing.JTextField lastnameTField;
     private javax.swing.JScrollPane recordScrollTable;
     private javax.swing.JTable recordTable;
     private javax.swing.JComboBox<String> sectionCBox;
     private javax.swing.JLabel sectionLabel;
+    private javax.swing.JLabel studentRecordTitle;
     private javax.swing.JButton updateBTN;
     // End of variables declaration//GEN-END:variables
 }

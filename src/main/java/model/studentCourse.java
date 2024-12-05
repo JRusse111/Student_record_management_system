@@ -9,5 +9,24 @@ package model;
  * @author LordD
  */
 public class studentCourse {
+    private int id;
+    private String course;
+
+    public int getId() {
+        return id;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
+    
     
 }
