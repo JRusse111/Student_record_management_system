@@ -151,7 +151,7 @@ public class connectionController {
             while(resultSet.next()){
                 studentAccount account = new studentAccount();
                 account.setId(resultSet.getInt("id"));
-                account.setSchoolid(resultSet.getString("schoolid"));
+                account.setSchoolid(resultSet.getString("studentid"));
                 account.setLastname(resultSet.getString("lastname"));
                 studentAccounts.add(account);
             }

@@ -15,12 +15,12 @@ import java.util.List;
  */
 public class loginPage extends javax.swing.JFrame {
     
-    private connectionController connController;
     /**
      * Creates new form loginPage
      */
     public loginPage() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -151,12 +151,14 @@ public class loginPage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLoginActionPerformed
     
      private void studentLogin(String username, String password) {
-
-        List<studentAccount> accounts = connController.fetchstudentaccount(); 
+         
+        connectionController CC = new connectionController();
+        List<studentAccount> accounts = CC.fetchstudentaccount(); 
         boolean isVerified = false;
         
         
         for (studentAccount account : accounts) {
+            System.out.println(account.getSchoolid() + " : " + username +account.getSchoolid().equals(username)+"|"+account.getLastname() +" : " +password +account.getLastname().equals(password));
             if (account.getSchoolid().equals(username) && account.getLastname().equals(password)) {
                 isVerified = true;
                 break;
@@ -164,47 +166,15 @@ public class loginPage extends javax.swing.JFrame {
         }
         if (isVerified) {
             JOptionPane.showMessageDialog(this, "Login Successful!");
-            dispose();
             studentDashboard studentdashboard = new studentDashboard();
+            studentdashboard.setLocationRelativeTo(null);
             studentdashboard.setVisible(true);
+            this.dispose();
         } else{
             JOptionPane.showMessageDialog(this, "Invalid Usernamme or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(loginPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(loginPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(loginPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(loginPage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new loginPage().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
