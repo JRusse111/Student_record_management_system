@@ -7,6 +7,7 @@ package control;
 import model.studentRecord;
 import model.studentCourse;
 import model.studentSection;
+import model.studentAccount;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -134,6 +135,32 @@ public class connectionController {
         
         return sections;
     }
+    
+    // GET STUDENT ACCOUNT
+    public List<studentAccount> fetchstudentaccount(){
+        List<studentAccount> studentAccounts = new ArrayList<>();
+        String query = """
+            SELECT *
+            FROM studentAccount;              
+        """;
+    
+        try (Connection con = SQLconnection();
+         PreparedStatement preparedStatement = con.prepareStatement(query);
+         ResultSet resultSet = preparedStatement.executeQuery()){
+        
+            while(resultSet.next()){
+                studentAccount account = new studentAccount();
+                account.setId(resultSet.getInt("id"));
+                account.setSchoolid(resultSet.getString("schoolid"));
+                account.setLastname(resultSet.getString("lastname"));
+                studentAccounts.add(account);
+            }
+        } catch(SQLException e){
+            System.err.println("Error retrieving student accounts: " + e.getMessage());
+    }
+    return studentAccounts;
+    }
+    
     //INSERT INTO TABLE
     
     public void insertIntoTable(String schoolId, String firstName, String lastName, int section, int course) {
