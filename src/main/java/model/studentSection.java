@@ -10,21 +10,39 @@ package model;
  */
 public class studentSection {
     private int id;
-    private String section;
+    private String sectionname;
+    private int sectionnumber;
+    private String courseid;
+
+    public void setSectionnumber(int sectionnumber) {
+        this.sectionnumber = sectionnumber;
+    }
+
+    public void setCourseid(String courseid) {
+        this.courseid = courseid;
+    }
+
+    public int getSectionnumber() {
+        return sectionnumber;
+    }
+
+    public String getCourseid() {
+        return courseid;
+    }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setSection(String section) {
-        this.section = section;
+    public void setSectionname(String section) {
+        this.sectionname = section;
     }
     public int getId() {
         return id;
     }
 
-    public String getSection() {
-        return section;
+    public String getSectionname() {
+        return sectionname;
     }
     
 }

@@ -48,7 +48,7 @@ public class connectionController {
     public List<studentRecord> fetchrecordtable(String status){
         List<studentRecord> studentRecordList = new ArrayList<>();
         String query = """
-            SELECT sr.schoolid, sr.firstname, sr.lastname, ss.section, sc.course
+            SELECT sr.schoolid, sr.firstname, sr.lastname, ss.sectionname, sc.course
             FROM studentrecord sr
             JOIN studentsection ss ON sr.section = ss.id
             JOIN studentcourse sc ON sr.course = sc.id
@@ -67,7 +67,7 @@ public class connectionController {
                     record.setFirstname(resultSet.getString("firstname"));
                     record.setLastname(resultSet.getString("lastname"));
                     record.setCourse(resultSet.getString("course"));
-                    record.setSection(resultSet.getString("section"));
+                    record.setSection(resultSet.getString("sectionname"));
                     studentRecordList.add(record);
                 }
             }
@@ -103,8 +103,17 @@ public class connectionController {
     public List<studentSection> fetchstudentsection(){
         List<studentSection> sections = new ArrayList();
         String query = """
-            SELECT *
-            FROM studentsection
+            SELECT 
+                studentsection.id AS section_id,
+                studentcourse.course AS course_name,
+                studentsection.sectionnumber AS section_number,
+                studentsection.sectionname AS section_name
+            FROM 
+                studentsection
+            JOIN 
+                studentcourse
+            ON 
+                studentsection.courseid = studentcourse.id
         """;
         try (Connection con = SQLconnection();
             PreparedStatement preparedStatement = con.prepareStatement(query)) {
@@ -112,8 +121,10 @@ public class connectionController {
             try(ResultSet resultSet = preparedStatement.executeQuery()){
                 while (resultSet.next()) {
                     studentSection section = new studentSection();
-                    section.setId(resultSet.getInt("id"));
-                    section.setSection(resultSet.getString("section"));
+                    section.setId(resultSet.getInt("section_id"));
+                    section.setCourseid(resultSet.getString("course_name"));
+                    section.setSectionnumber(resultSet.getInt("section_number"));
+                    section.setSectionname(resultSet.getString("section_name"));
                     sections.add(section);
                 }
             }
@@ -173,4 +184,8 @@ public class connectionController {
             System.err.println("Error during inserting: " + e);
         }
     }
+    
+    
+    //---------------------------coursedashboard
+    
 }
