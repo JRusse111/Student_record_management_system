@@ -8,6 +8,7 @@ import model.studentRecord;
 import model.studentCourse;
 import model.studentSection;
 import model.studentAccount;
+import model.adminAccount;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -159,6 +160,31 @@ public class connectionController {
             System.err.println("Error retrieving student accounts: " + e.getMessage());
     }
     return studentAccounts;
+    }
+    
+    // GET ADMIN ACCOUNT
+    public List<adminAccount> fetchadminaccount() {
+        List<adminAccount> admins = new ArrayList<>();
+        String query = """
+            SELECT * 
+            FROM adminaccount;
+        """;
+
+        try (Connection con = SQLconnection();
+         PreparedStatement preparedStatement = con.prepareStatement(query);
+         ResultSet resultSet = preparedStatement.executeQuery()) {
+        
+            while (resultSet.next()) {
+                adminAccount admin = new adminAccount();
+                admin.setId(resultSet.getInt("id"));
+                admin.setAdminUsername(resultSet.getString("adminUsername"));
+                admin.setAdminPassword(resultSet.getString("adminPassword"));
+                admins.add(admin);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error retrieving admin accounts: " + e.getMessage());
+        }
+    return admins;
     }
     
     //INSERT INTO TABLE
