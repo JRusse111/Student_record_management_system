@@ -177,8 +177,8 @@ public class connectionController {
             while (resultSet.next()) {
                 adminAccount admin = new adminAccount();
                 admin.setId(resultSet.getInt("id"));
-                admin.setAdminUsername(resultSet.getString("adminUsername"));
-                admin.setAdminPassword(resultSet.getString("adminPassword"));
+                admin.setFirstname(resultSet.getString("firstname"));
+                admin.setLastname(resultSet.getString("lastname"));
                 admins.add(admin);
             }
         } catch (SQLException e) {

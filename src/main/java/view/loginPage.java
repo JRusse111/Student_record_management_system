@@ -44,6 +44,7 @@ public class loginPage extends javax.swing.JFrame {
         txtPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 50)); // NOI18N
         jLabel1.setText("SIGN IN");
@@ -144,7 +145,7 @@ public class loginPage extends javax.swing.JFrame {
             studentLogin(username, password);
         } else {
             adminLogin(username, password);
-        }
+        } 
     }//GEN-LAST:event_btnLoginActionPerformed
     
      private void studentLogin(String username, String password) {
@@ -179,8 +180,8 @@ public class loginPage extends javax.swing.JFrame {
         boolean isVerified = false;
 
         for (adminAccount admin : admins) {
-            System.out.println(admin.getAdminUsername() + " : " + username + admin.getAdminUsername().equals(username) + "|" +admin.getAdminPassword() + " : " + password + admin.getAdminPassword().equals(password));
-            if (admin.getAdminUsername().equals(username) && admin.getAdminPassword().equals(password)) {
+            System.out.println(admin.getFirstname() + " : " + username + admin.getLastname().equals(username) + "|" +admin.getLastname() + " : " + password + admin.getLastname().equals(password));
+            if (admin.getFirstname().equals(username) && admin.getLastname().equals(password)) {
             isVerified = true;
             break;
             }
@@ -188,9 +189,9 @@ public class loginPage extends javax.swing.JFrame {
 
         if (isVerified) {
             JOptionPane.showMessageDialog(this, "Admin Login Successful!");
-            adminDashboard admindashboard = new adminDashboard();
-            admindashboard.setLocationRelativeTo(null);
-            admindashboard.setVisible(true);
+            adminHomeDashboard adminhomedashboard = new adminHomeDashboard();
+            adminhomedashboard.setLocationRelativeTo(null);
+            adminhomedashboard.setVisible(true);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Invalid Username or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
