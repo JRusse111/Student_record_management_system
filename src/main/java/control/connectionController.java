@@ -49,7 +49,7 @@ public class connectionController {
     public List<studentRecord> fetchrecordtable(String status){
         List<studentRecord> studentRecordList = new ArrayList<>();
         String query = """
-            SELECT sr.schoolid, sr.firstname, sr.lastname, ss.sectionname, sc.course
+            SELECT sr.id ,sr.schoolid, sr.firstname, sr.lastname, ss.sectionname, sc.course
             FROM studentrecord sr
             JOIN studentsection ss ON sr.section = ss.id
             JOIN studentcourse sc ON sr.course = sc.id
@@ -64,6 +64,7 @@ public class connectionController {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     studentRecord record = new studentRecord();
+                    record.setId(resultSet.getInt("id"));
                     record.setSchoolid(resultSet.getString("schoolid"));
                     record.setFirstname(resultSet.getString("firstname"));
                     record.setLastname(resultSet.getString("lastname"));
@@ -178,8 +179,8 @@ public class connectionController {
                 preparedStatementRecord.setString(1, schoolId);
                 preparedStatementRecord.setString(2, firstName);
                 preparedStatementRecord.setString(3, lastName);
-                preparedStatementRecord.setInt(4, section + 1);
-                preparedStatementRecord.setInt(5, course + 1);
+                preparedStatementRecord.setInt(4, section);
+                preparedStatementRecord.setInt(5, course);
                 preparedStatementRecord.executeUpdate();
             }
 
@@ -212,7 +213,32 @@ public class connectionController {
         }
     }
     
+    public void updateStudentrecordtable(int id,String schoolId,String firstname,String lastname,int section,int course)
+    {
+        String query = """
+                       UPDATE studentrecord
+                       SET schoolid = ? ,firstname = ? ,lastname = ?,section = ?, course = ?
+                       WHERE id = ?
+        """;
+        
+        try(Connection con = SQLconnection())
+        {
+            try(PreparedStatement preparedStatementRecord = con.prepareStatement(query)){
+                preparedStatementRecord.setString(1, schoolId);
+                preparedStatementRecord.setString(2, firstname);
+                preparedStatementRecord.setString(3, lastname);
+                preparedStatementRecord.setInt(4, section);
+                preparedStatementRecord.setInt(5, course);
+                preparedStatementRecord.setInt(6, id);
+                preparedStatementRecord.executeUpdate();
+            }
+        }catch(SQLException e)
+        {
+            System.out.println("Error updating Student Record: " + e);
+        }
+    }
     
+//    public void findSectionid(){};
+//    public void find();
     //---------------------------coursedashboard
-    
 }

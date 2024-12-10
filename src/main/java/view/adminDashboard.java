@@ -21,7 +21,7 @@ import javax.swing.table.TableRowSorter;
  * @author LordD
  */
 public class adminDashboard extends javax.swing.JFrame {
-    
+    // TODO :: FIX THE UPDATE TABLE FOR SECTION AND COURSE
     /**
      * Creates new form adminDashboard
      */
@@ -34,7 +34,7 @@ public class adminDashboard extends javax.swing.JFrame {
         
         updateTable();
         updateCoursebox();
-        updateSectionbox();
+//        updateSectionbox();
     }
 
     /**
@@ -75,20 +75,20 @@ public class adminDashboard extends javax.swing.JFrame {
 
         recordTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "FIRSTNAME", "LASTNAME", "SECTION", "COURSE"
+                "ID", "STUDENT ID", "FIRSTNAME", "LASTNAME", "SECTION", "COURSE"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -123,11 +123,22 @@ public class adminDashboard extends javax.swing.JFrame {
         });
 
         updateBTN.setText("UPDATE");
+        updateBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateBTNActionPerformed(evt);
+            }
+        });
 
         clearBTN.setText("CLEAR");
         clearBTN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearForm(evt);
+            }
+        });
+
+        courseCBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                courseCBoxActionPerformed(evt);
             }
         });
 
@@ -310,9 +321,10 @@ public class adminDashboard extends javax.swing.JFrame {
         connectionController CC = new connectionController();
         int selectedRow = recordTable.getSelectedRow();
         if(selectedRow != -1 && 0 == deleteconformation()){
-            String studentId = (String) recordTable.getValueAt(selectedRow,0);
+            String studentId = (String) recordTable.getValueAt(selectedRow,1);
             CC.removeFromtable(studentId);
         }
+        clearForm();
         updateTable();
     }//GEN-LAST:event_deleteBTNActionPerformed
 
@@ -346,9 +358,14 @@ public class adminDashboard extends javax.swing.JFrame {
                 CC.insertIntoTable(idTField.getText(), 
                         firstnameTField.getText(), 
                         lastnameTField.getText(),
-                        sectionCBox.getSelectedIndex(), 
-                        courseCBox.getSelectedIndex()
+                        getIndexSection(), 
+                        getIndexCourse()
                 );
+//                System.out.println(idTField.getText()+ " | "+
+//                        firstnameTField.getText()+ " | "+
+//                        lastnameTField.getText()+ " |Section"+
+//                        getIndexSection()+ " |Course" +
+//                        getIndexCourse());
             }
             clearForm();
         }
@@ -372,11 +389,12 @@ public class adminDashboard extends javax.swing.JFrame {
     private void recordTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recordTableMouseClicked
         int selectedRow = recordTable.getSelectedRow();
         if(selectedRow != -1){
-            idTField.setText((String) recordTable.getValueAt(selectedRow,0));
-            firstnameTField.setText((String) recordTable.getValueAt(selectedRow,1));
-            lastnameTField.setText((String) recordTable.getValueAt(selectedRow, 2));
-            String selectedSection = (String) recordTable.getValueAt(selectedRow, 3);
-            String selectedCourse = (String) recordTable.getValueAt(selectedRow, 4);
+            
+            idTField.setText((String) recordTable.getValueAt(selectedRow,1));
+            firstnameTField.setText((String) recordTable.getValueAt(selectedRow,2));
+            lastnameTField.setText((String) recordTable.getValueAt(selectedRow, 3));
+            String selectedSection = (String) recordTable.getValueAt(selectedRow, 4);
+            String selectedCourse = (String) recordTable.getValueAt(selectedRow, 5);
             for (int i = 0; i < courseCBox.getItemCount(); i++) {
                 if (courseCBox.getItemAt(i).equals(selectedCourse)) {
                     courseCBox.setSelectedIndex(i);
@@ -408,23 +426,53 @@ public class adminDashboard extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_leftBTNActionPerformed
 
+    private void updateBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBTNActionPerformed
+        connectionController CC = new connectionController();
+        int selectedRow = recordTable.getSelectedRow();
+        if(selectedRow != -1){
+            int id = (int) recordTable.getValueAt(selectedRow,0);
+            String schoolid = idTField.getText();
+            String firstname = firstnameTField.getText();
+            String lastname = lastnameTField.getText();
+            CC.updateStudentrecordtable(id,schoolid, firstname , lastname, getIndexSection(), getIndexCourse());
+//            System.out.println(id + " | " + schoolid + " | " + firstname + "|" + lastname + "|section:" + getIndexSection() +"|course:"+ getIndexCourse());
+        }
+        clearForm();
+        updateTable();
+    }//GEN-LAST:event_updateBTNActionPerformed
+
+    private void courseCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_courseCBoxActionPerformed
+        connectionController CC = new connectionController();
+        List<studentCourse> courses = CC.fetchstudentcourse();
+        String itemCoursebox = courseCBox.getItemAt(courseCBox.getSelectedIndex());
+        for(studentCourse course : courses)
+        {
+//            System.out.println(course.getCourse() + " | " + itemCoursebox);
+            if(course.getCourse().equals(itemCoursebox))
+            {
+                updateSectionbox(course.getId());
+            }
+        }
+    }//GEN-LAST:event_courseCBoxActionPerformed
+
     // VIEW FUNCTION HERE!
     public void updateTable()
     {
         DefaultTableModel dTable = (DefaultTableModel) recordTable.getModel();
         dTable.setRowCount(0);
         connectionController CC = new connectionController();
-
+        
         List<studentRecord> sRecord = CC.fetchrecordtable("T");
         for(studentRecord record : sRecord)
         {
+            int id = record.getId();
             String schoolid = record.getSchoolid();
             String firstname = record.getFirstname();
             String lastname = record.getLastname();
             String section = record.getSection();
             String course = record.getCourse();
 
-            dTable.addRow(new Object[] {schoolid, firstname, lastname, section, course});
+            dTable.addRow(new Object[] {id ,schoolid, firstname, lastname, section, course});
         }
     }
     
@@ -432,21 +480,56 @@ public class adminDashboard extends javax.swing.JFrame {
     {
         connectionController CC = new connectionController();
         List<studentCourse> courses = CC.fetchstudentcourse();
-        
         for(studentCourse course : courses)
         {
             courseCBox.addItem(course.getCourse());
         }
     }
-    public void updateSectionbox()
+   
+    public void updateSectionbox(int courseid)
+    {
+        sectionCBox.removeAllItems();
+        connectionController CC = new connectionController();
+        List<studentSection> sections = CC.fetchstudentsection();
+        for(studentSection section : sections)
+        {
+//            System.out.println(courseid);
+            if(courseid == section.getSectionnumber())
+            {
+                sectionCBox.addItem(section.getSectionname());
+            }
+        }
+    }
+    
+    public int getIndexCourse()
+    {
+        connectionController CC = new connectionController();
+        List<studentCourse> courses = CC.fetchstudentcourse();
+        String courseBox = courseCBox.getItemAt(courseCBox.getSelectedIndex());
+        System.out.println("get index course: " + courseBox);
+        for(studentCourse course: courses)
+        {
+            if(course.getCourse().equals(courseBox))
+            {
+                return course.getId();
+            }
+        }
+        return -1;
+    }
+    public int getIndexSection()
     {
         connectionController CC = new connectionController();
         List<studentSection> sections = CC.fetchstudentsection();
-        
-        for(studentSection section : sections)
+        String sectionBox = sectionCBox.getItemAt(sectionCBox.getSelectedIndex());
+        System.out.println("get index section:" + sectionBox);
+        for(studentSection section: sections)
         {
-            sectionCBox.addItem(section.getSectionname());
+            if(section.getSectionname().equals(sectionBox))
+            {
+                return section.getSectionnumber();
+            }
         }
+        return -1;
     }
     
     private void clearForm()
@@ -457,6 +540,8 @@ public class adminDashboard extends javax.swing.JFrame {
         sectionCBox.setSelectedIndex(0); 
         courseCBox.setSelectedIndex(0);
     }
+    
+    
     
     private boolean isFormEmpty()
     {

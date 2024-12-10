@@ -12,9 +12,9 @@ import view.adminDashboard;
  */
 public class Student_record_management_system {
     public static void main(String[] args) {
-//        adminDashboard aDashboard = new adminDashboard();
-//        aDashboard.setVisible(true);
-        loginPage loginPage = new loginPage();
-        loginPage.setVisible(true);
+        adminDashboard aDashboard = new adminDashboard();
+        aDashboard.setVisible(true);
+//        loginPage loginPage = new loginPage();
+//        loginPage.setVisible(true);
     }
 }

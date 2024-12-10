@@ -11,7 +11,7 @@ package model;
 public class studentCourse {
     private int id;
     private String course;
-
+    
     public int getId() {
         return id;
     }
