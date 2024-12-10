@@ -164,9 +164,12 @@ public class loginPage extends javax.swing.JFrame {
         }
         if (isVerified) {
             JOptionPane.showMessageDialog(this, "Login Successful!");
-            studentDashboard studentdashboard = new studentDashboard();
-            studentdashboard.setLocationRelativeTo(null);
-            studentdashboard.setVisible(true);
+            adminDashboard adminDashboard = new adminDashboard();
+            adminDashboard.setLocationRelativeTo(null);
+            adminDashboard.setVisible(true);
+//            studentDashboard studentdashboard = new studentDashboard();
+//            studentdashboard.setLocationRelativeTo(null);
+//            studentdashboard.setVisible(true);
             this.dispose();
         } else{
             JOptionPane.showMessageDialog(this, "Invalid Usernamme or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
