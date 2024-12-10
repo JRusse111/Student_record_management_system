@@ -6,6 +6,7 @@ package view;
 
 import control.connectionController;
 import model.studentAccount;
+import model.adminAccount;
 
 import javax.swing.JOptionPane;
 import java.util.List;
@@ -36,13 +37,14 @@ public class loginPage extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtUsername = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
         roleVerify = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        txtPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 50)); // NOI18N
         jLabel1.setText("SIGN IN");
@@ -54,8 +56,6 @@ public class loginPage extends javax.swing.JFrame {
         jLabel3.setText("Username");
 
         txtUsername.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-
-        txtPassword.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
 
         btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnLogin.setText("LOGIN");
@@ -85,19 +85,18 @@ public class loginPage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(92, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(roleVerify, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jLabel3)
-                        .addComponent(txtUsername)
-                        .addComponent(jLabel4)
-                        .addComponent(txtPassword)
-                        .addComponent(jLabel1)
-                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(roleVerify, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3)
+                    .addComponent(txtUsername)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel1)
+                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(txtPassword))
                 .addGap(78, 78, 78))
         );
         layout.setVerticalGroup(
@@ -113,13 +112,13 @@ public class loginPage extends javax.swing.JFrame {
                     .addComponent(roleVerify, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jLabel4)
-                .addGap(7, 7, 7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
+                .addGap(38, 38, 38)
                 .addComponent(btnLogin)
                 .addGap(69, 69, 69))
         );
@@ -141,13 +140,12 @@ public class loginPage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please enter your School ID or password.");
             return;
         }
-        // If user select student in combo box
+        // Student and Admin login
         if (role.equals("Student")) {
             studentLogin(username, password);
         } else {
-            // If user select admin in combo box
-            JOptionPane.showMessageDialog(this, "");
-        }
+            adminLogin(username, password);
+        } 
     }//GEN-LAST:event_btnLoginActionPerformed
     
      private void studentLogin(String username, String password) {
@@ -174,7 +172,31 @@ public class loginPage extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Invalid Usernamme or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+     
+    private void adminLogin(String username, String password) {
+    
+        connectionController CC = new connectionController();
+        List<adminAccount> admins = CC.fetchadminaccount(); 
+        boolean isVerified = false;
 
+        for (adminAccount admin : admins) {
+            System.out.println(admin.getFirstname() + " : " + username + admin.getLastname().equals(username) + "|" +admin.getLastname() + " : " + password + admin.getLastname().equals(password));
+            if (admin.getFirstname().equals(username) && admin.getLastname().equals(password)) {
+            isVerified = true;
+            break;
+            }
+        }
+
+        if (isVerified) {
+            JOptionPane.showMessageDialog(this, "Admin Login Successful!");
+            adminHomeDashboard adminhomedashboard = new adminHomeDashboard();
+            adminhomedashboard.setLocationRelativeTo(null);
+            adminhomedashboard.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid Username or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
@@ -184,7 +206,7 @@ public class loginPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JComboBox<String> roleVerify;
-    private javax.swing.JTextField txtPassword;
+    private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }
