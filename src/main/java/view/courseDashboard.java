@@ -4,15 +4,13 @@
  */
 package view;
 
-import control.connectionController;
+import model.connectionController;
 import java.util.List;
-import java.util.Locale;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import model.studentCourse;
-import model.studentRecord;
 
 /**
  *
@@ -244,81 +242,19 @@ public class courseDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void recordTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recordTableMouseClicked
-//        int selectedRow = recordTable.getSelectedRow();
-//        if(selectedRow != -1){
-//            idTField.setText((String) recordTable.getValueAt(selectedRow,0));
-//            firstnameTField.setText((String) recordTable.getValueAt(selectedRow,1));
-//            lastnameTField.setText((String) recordTable.getValueAt(selectedRow, 2));
-//            String selectedSection = (String) recordTable.getValueAt(selectedRow, 3);
-//            String selectedCourse = (String) recordTable.getValueAt(selectedRow, 4);
-//            for (int i = 0; i < courseCBox.getItemCount(); i++) {
-//                if (courseCBox.getItemAt(i).equals(selectedCourse)) {
-//                    courseCBox.setSelectedIndex(i);
-//                    break;
-//                }
-//            }
-//            for (int i = 0; i < sectionCBox.getItemCount(); i++) {
-//                //                System.out.println(sectionCBox.getItemAt(i) + " | " + selectedSection);
-//                if (sectionCBox.getItemAt(i).equals(selectedSection)) {
-//                    sectionCBox.setSelectedIndex(i);
-//                    break;
-//                }
-//            }
-//        }
+
     }//GEN-LAST:event_recordTableMouseClicked
 
     private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
-        //CHECK IF EMTY
-//        if(isFormEmpty())
-//        {
-//            fillerrorMessage();
-//            return;
-//        }
-//        connectionController CC = new connectionController();
-//        List<studentRecord> records = CC.fetchrecordtable("T");
-//        boolean exists = false;
-//
-//        for (studentRecord record : records) {
-//            if (record.getSchoolid().equals(idTField.getText())) {
-//                exists = true;
-//                break;
-//            }
-//        }
-//
-//        if (exists) {
-//            //            System.out.println("ERROR");
-//            existerrorMessage();
-//        } else {
-//            if(0 == confirmationMessage()){
-//                CC.insertIntoTable(idTField.getText(),
-//                    firstnameTField.getText(),
-//                    lastnameTField.getText(),
-//                    sectionCBox.getSelectedIndex(),
-//                    courseCBox.getSelectedIndex()
-//                );
-//            }
-//            clearForm();
-//        }
-//        updateTable();
+
     }//GEN-LAST:event_addBTNActionPerformed
 
     private void deleteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBTNActionPerformed
-//        if(isFormEmpty())
-//        {
-//            fillerrorMessage();
-//            return;
-//        }
-//        connectionController CC = new connectionController();
-//        int selectedRow = recordTable.getSelectedRow();
-//        if(selectedRow != -1 && 0 == deleteconformation()){
-//            String studentId = (String) recordTable.getValueAt(selectedRow,0);
-//            CC.removeFromtable(studentId);
-//        }
-//        updateTable();
+
     }//GEN-LAST:event_deleteBTNActionPerformed
 
     private void clearBTNclearForm(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBTNclearForm
-//        clearForm();
+
     }//GEN-LAST:event_clearBTNclearForm
 
     private void searchBarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyReleased

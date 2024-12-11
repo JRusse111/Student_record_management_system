@@ -4,7 +4,7 @@
  */
 package view;
 
-import control.connectionController;
+import model.connectionController;
 import java.util.List;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;

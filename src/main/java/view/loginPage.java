@@ -4,7 +4,7 @@
  */
 package view;
 
-import control.connectionController;
+import model.connectionController;
 import model.studentAccount;
 import model.adminAccount;
 

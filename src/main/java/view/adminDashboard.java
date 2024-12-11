@@ -4,36 +4,27 @@
  */
 package view;
 
-import control.connectionController;
-import model.studentRecord;
-import model.studentCourse;
-import model.studentSection;
-
-
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import java.util.List;
-import javax.swing.RowFilter;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
+import control.adminDashboardController;
+import model.connectionController;
+import control.errorMessages;
 /**
  *
  * @author LordD
  */
 public class adminDashboard extends javax.swing.JFrame {
-    // TODO :: FIX THE UPDATE TABLE FOR SECTION AND COURSE
+    // TODO :: DO THE MAX(sectionid) where courseid
     /**
      * Creates new form adminDashboard
      */
     public adminDashboard() {
         initComponents();
-        
-        // CONNECT TO DATABASE
+        adminDashboardController adminDController = new adminDashboardController();
         connectionController conn = new connectionController();
+        // CONNECT TO DATABASE
         conn.DBconnect();
         
-        updateTable();
-        updateCoursebox();
+        adminDController .updateRecordTable(recordTable);
+        adminDController .updateCoursebox(courseCBox);
 //        updateSectionbox();
     }
 
@@ -313,19 +304,15 @@ public class adminDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBTNActionPerformed
+        errorMessages ErrorMessage = new errorMessages();
+        adminDashboardController adminDController = new adminDashboardController();
         if(isFormEmpty())
         {
-            fillerrorMessage();
+            ErrorMessage.fillerrorMessage();
             return;
         }
-        connectionController CC = new connectionController();
-        int selectedRow = recordTable.getSelectedRow();
-        if(selectedRow != -1 && 0 == deleteconformation()){
-            String studentId = (String) recordTable.getValueAt(selectedRow,1);
-            CC.removeFromtable(studentId);
-        }
-        clearForm();
-        updateTable();
+        adminDController.deleteRecordfromtable(recordTable,ErrorMessage);
+        
     }//GEN-LAST:event_deleteBTNActionPerformed
 
     private void clearForm(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearForm
@@ -333,82 +320,18 @@ public class adminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_clearForm
 
     private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
-        //CHECK IF EMTY
-        if(isFormEmpty())
-        {
-            fillerrorMessage();
-            return;
-        }
-        connectionController CC = new connectionController();
-        List<studentRecord> records = CC.fetchrecordtable("T");
-        boolean exists = false;
-
-        for (studentRecord record : records) {
-            if (record.getSchoolid().equals(idTField.getText())) {
-                exists = true;
-                break;
-            }
-        }
-
-        if (exists) {
-//            System.out.println("ERROR");
-            existerrorMessage();
-        } else {
-            if(0 == confirmationMessage()){
-                CC.insertIntoTable(idTField.getText(), 
-                        firstnameTField.getText(), 
-                        lastnameTField.getText(),
-                        getIndexSection(), 
-                        getIndexCourse()
-                );
-//                System.out.println(idTField.getText()+ " | "+
-//                        firstnameTField.getText()+ " | "+
-//                        lastnameTField.getText()+ " |Section"+
-//                        getIndexSection()+ " |Course" +
-//                        getIndexCourse());
-            }
-            clearForm();
-        }
-        updateTable();
+        adminDashboardController adminDController = new adminDashboardController();
+        adminDController.addRecordtotable(idTField, firstnameTField, lastnameTField,recordTable,sectionCBox,courseCBox);
     }//GEN-LAST:event_addBTNActionPerformed
 
     private void searchBarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyReleased
-        DefaultTableModel dTable = (DefaultTableModel) recordTable.getModel();
-        String text = searchBar.getText();
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(dTable);
-        recordTable.setRowSorter(sorter);
-        
-        if (text.trim().length() == 0) {
-            sorter.setRowFilter(null);
-        } else {
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-        }
+        adminDashboardController adminDController = new adminDashboardController();
+        adminDController.searchBarfunction(recordTable,searchBar);
     }//GEN-LAST:event_searchBarKeyReleased
 
-    //TABLE CLIKCED
     private void recordTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recordTableMouseClicked
-        int selectedRow = recordTable.getSelectedRow();
-        if(selectedRow != -1){
-            
-            idTField.setText((String) recordTable.getValueAt(selectedRow,1));
-            firstnameTField.setText((String) recordTable.getValueAt(selectedRow,2));
-            lastnameTField.setText((String) recordTable.getValueAt(selectedRow, 3));
-            String selectedSection = (String) recordTable.getValueAt(selectedRow, 4);
-            String selectedCourse = (String) recordTable.getValueAt(selectedRow, 5);
-            for (int i = 0; i < courseCBox.getItemCount(); i++) {
-                if (courseCBox.getItemAt(i).equals(selectedCourse)) {
-                    courseCBox.setSelectedIndex(i);
-                    break;
-                }
-            }
-            for (int i = 0; i < sectionCBox.getItemCount(); i++) {
-                //                System.out.println(sectionCBox.getItemAt(i) + " | " + selectedSection);
-                if (sectionCBox.getItemAt(i).equals(selectedSection)) {
-                    sectionCBox.setSelectedIndex(i);
-                    break;
-                }
-            }
-        }
+        adminDashboardController adminDController = new adminDashboardController();
+        adminDController.clickedTable(recordTable,  idTField, firstnameTField,  lastnameTField, courseCBox, sectionCBox);
 
     }//GEN-LAST:event_recordTableMouseClicked
 
@@ -427,111 +350,15 @@ public class adminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_leftBTNActionPerformed
 
     private void updateBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBTNActionPerformed
-        connectionController CC = new connectionController();
-        int selectedRow = recordTable.getSelectedRow();
-        if(selectedRow != -1){
-            int id = (int) recordTable.getValueAt(selectedRow,0);
-            String schoolid = idTField.getText();
-            String firstname = firstnameTField.getText();
-            String lastname = lastnameTField.getText();
-            CC.updateStudentrecordtable(id,schoolid, firstname , lastname, getIndexSection(), getIndexCourse());
-//            System.out.println(id + " | " + schoolid + " | " + firstname + "|" + lastname + "|section:" + getIndexSection() +"|course:"+ getIndexCourse());
-        }
-        clearForm();
-        updateTable();
+        adminDashboardController adminDController = new adminDashboardController();
+        adminDController.udpateRecordintable(recordTable,idTField,firstnameTField,lastnameTField,sectionCBox,courseCBox);
     }//GEN-LAST:event_updateBTNActionPerformed
 
     private void courseCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_courseCBoxActionPerformed
-        connectionController CC = new connectionController();
-        List<studentCourse> courses = CC.fetchstudentcourse();
-        String itemCoursebox = courseCBox.getItemAt(courseCBox.getSelectedIndex());
-        for(studentCourse course : courses)
-        {
-//            System.out.println(course.getCourse() + " | " + itemCoursebox);
-            if(course.getCourse().equals(itemCoursebox))
-            {
-                updateSectionbox(course.getId());
-            }
-        }
+        adminDashboardController adminDController = new adminDashboardController();
+        adminDController.sectionListcourse(courseCBox,sectionCBox);
     }//GEN-LAST:event_courseCBoxActionPerformed
-
-    // VIEW FUNCTION HERE!
-    public void updateTable()
-    {
-        DefaultTableModel dTable = (DefaultTableModel) recordTable.getModel();
-        dTable.setRowCount(0);
-        connectionController CC = new connectionController();
-        
-        List<studentRecord> sRecord = CC.fetchrecordtable("T");
-        for(studentRecord record : sRecord)
-        {
-            int id = record.getId();
-            String schoolid = record.getSchoolid();
-            String firstname = record.getFirstname();
-            String lastname = record.getLastname();
-            String section = record.getSection();
-            String course = record.getCourse();
-
-            dTable.addRow(new Object[] {id ,schoolid, firstname, lastname, section, course});
-        }
-    }
-    
-    public void updateCoursebox()
-    {
-        connectionController CC = new connectionController();
-        List<studentCourse> courses = CC.fetchstudentcourse();
-        for(studentCourse course : courses)
-        {
-            courseCBox.addItem(course.getCourse());
-        }
-    }
-   
-    public void updateSectionbox(int courseid)
-    {
-        sectionCBox.removeAllItems();
-        connectionController CC = new connectionController();
-        List<studentSection> sections = CC.fetchstudentsection();
-        for(studentSection section : sections)
-        {
-//            System.out.println(courseid);
-            if(courseid == section.getSectionnumber())
-            {
-                sectionCBox.addItem(section.getSectionname());
-            }
-        }
-    }
-    
-    public int getIndexCourse()
-    {
-        connectionController CC = new connectionController();
-        List<studentCourse> courses = CC.fetchstudentcourse();
-        String courseBox = courseCBox.getItemAt(courseCBox.getSelectedIndex());
-        System.out.println("get index course: " + courseBox);
-        for(studentCourse course: courses)
-        {
-            if(course.getCourse().equals(courseBox))
-            {
-                return course.getId();
-            }
-        }
-        return -1;
-    }
-    public int getIndexSection()
-    {
-        connectionController CC = new connectionController();
-        List<studentSection> sections = CC.fetchstudentsection();
-        String sectionBox = sectionCBox.getItemAt(sectionCBox.getSelectedIndex());
-        System.out.println("get index section:" + sectionBox);
-        for(studentSection section: sections)
-        {
-            if(section.getSectionname().equals(sectionBox))
-            {
-                return section.getSectionnumber();
-            }
-        }
-        return -1;
-    }
-    
+  
     private void clearForm()
     {
         idTField.setText("");
@@ -541,31 +368,11 @@ public class adminDashboard extends javax.swing.JFrame {
         courseCBox.setSelectedIndex(0);
     }
     
-    
-    
     private boolean isFormEmpty()
     {
         return idTField.getText().equals("") || firstnameTField.getText().equals("") || lastnameTField.getText().equals("");
     }
-    // MESSAGES
-    private void fillerrorMessage()
-    {
-        JOptionPane.showMessageDialog(null, "Fill in the blanks", "Error Inserting Data", JOptionPane.OK_OPTION);
-    }
-    private void existerrorMessage()
-    {
-        JOptionPane.showMessageDialog(null, "SchoolID AlreadyExist", "Error Inserting Data", JOptionPane.OK_OPTION);
-    }
-    private int deleteconformation()
-    {
-        int option = JOptionPane.showConfirmDialog(null,"Delete data?","Confirmation",JOptionPane.YES_NO_CANCEL_OPTION);
-        return option;
-    }
-    private int confirmationMessage()
-    {
-        int option = JOptionPane.showConfirmDialog(null,"Insert data?","Confirmation",JOptionPane.YES_NO_CANCEL_OPTION);
-        return option;
-    }
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
     private javax.swing.JPanel DetailPanel;
