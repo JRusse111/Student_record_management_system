@@ -188,6 +188,27 @@ public class connectionController {
     return admins;
     }
     
+    //SET STUDENT SESSION 'T' WHEN loggedin
+    public void updateStudentSession(String schoolId) {
+    String query = """
+        UPDATE studentaccount
+        SET session = 'T'
+        WHERE studentid = ?;
+    """;
+
+    try (Connection con = SQLconnection();
+         PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        preparedStatement.setString(1, schoolId);
+        int rowsAffected = preparedStatement.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Student session updated successfully.");
+        } else {
+            System.err.println("Failed to update session.");
+        }
+    } catch (SQLException e) {
+        System.err.println("Error updating student session: " + e.getMessage());
+    }
+}
     //INSERT INTO TABLE
     
     public void insertIntoTable(String schoolId, String firstName, String lastName, int section, int course) {
