@@ -32,6 +32,8 @@ public class loginController {
             if (account.getSchoolid().equals(username) && account.getLastname().equals(password)) {
                 for (studentRecord record : studentRecords) {
                     if (record.getSchoolid().equals(username)) {
+                        // Update session to 'T' for student
+                        cc.updateStudentSession(username);
                         return record; //Successful login
                     }
                 }
