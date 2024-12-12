@@ -23,7 +23,7 @@ public class loginController {
       public studentRecord studentLogin(String username, String password) {
         connectionController cc = new connectionController();
 
-        // Fetch student account and records
+        //Fetch student account and records
         List<studentAccount> accounts = cc.fetchstudentaccount();
         List<studentRecord> studentRecords = cc.fetchrecordtable("T"); 
 
@@ -32,14 +32,12 @@ public class loginController {
             if (account.getSchoolid().equals(username) && account.getLastname().equals(password)) {
                 for (studentRecord record : studentRecords) {
                     if (record.getSchoolid().equals(username)) {
-                        // Update session to 'T' for student
-                        cc.updateStudentSession(username);
                         return record; //Successful login
                     }
                 }
             }
         }
-        return null; // Login failed
+        return null; //Login failed
     }
       
       public boolean adminLogin(String username, String password) {
@@ -66,7 +64,11 @@ public class loginController {
         if (role.equals("Student")) {
             studentRecord loggedInStudent = studentLogin(username, password);
             if (loggedInStudent != null) {
+                connectionController cc = new connectionController();
+                //SET STUDENT SESSION TO 'T' 
+                cc.updateStudentSession(username, "T");
                 JOptionPane.showMessageDialog(loginpage, "Login Successful!");
+                
                 studentDashboard dashboard = new studentDashboard();
                 //Set the student details at studentDashboard
                 showStudentDashboard(dashboard, loggedInStudent);
@@ -96,6 +98,18 @@ public class loginController {
         }
     }
     
+    //METHOD LOGOUT FOR STUDENT
+         public void handleLogout(String studentid, studentDashboard dashboard) {
+        connectionController cc = new connectionController();
+        //SET STUDENT SESSION TO 'F' 
+        cc.updateStudentSession(studentid, "F");
+
+        loginPage loginPage = new loginPage();
+        loginPage.setLocationRelativeTo(null);
+        loginPage.setVisible(true);
+        dashboard.dispose();
+    }
+
       //Show Student Details at StudentDashboard
     public void showStudentDashboard(studentDashboard dashboard, studentRecord student) {
          dashboard.setStudentDetails(

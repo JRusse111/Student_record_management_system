@@ -4,6 +4,7 @@
  */
 package view;
 import model.connectionController;
+import control.loginController;
 /**
  *
  * @author LordD
@@ -13,6 +14,7 @@ public class studentDashboard extends javax.swing.JFrame {
     /**
      * Creates new form studentDashboard
      */
+    private String studentid;   
     public studentDashboard() {
         initComponents();
         connectionController conn = new connectionController();
@@ -139,10 +141,8 @@ public class studentDashboard extends javax.swing.JFrame {
     }
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
-        loginPage loginpage = new loginPage();
-        loginpage.setLocationRelativeTo(null);
-        loginpage.setVisible(true);
-        this.dispose();
+        loginController controller = new loginController();
+        controller.handleLogout(studentid, this);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
