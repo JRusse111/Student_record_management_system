@@ -12,9 +12,9 @@ import view.recordDashboard;
  */
 public class Student_record_management_system {
     public static void main(String[] args) {
+        loginPage loginPage = new loginPage();
+        loginPage.setVisible(true);
         recordDashboard aDashboard = new recordDashboard();
         aDashboard.setVisible(true);
-//        loginPage loginPage = new loginPage();
-//        loginPage.setVisible(true);
     }
 }

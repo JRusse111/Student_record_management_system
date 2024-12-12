@@ -192,6 +192,9 @@ public class connectionController {
         }
         return admins;
     }
+
+    
+    public void insertIntoTable(String schoolId, String firstName, String lastName, int section, int course) {
     //===============================
     public void insertIntorecordtotable(String schoolId, String firstName, String lastName, int section, int course) {
         String queryToRecord = """
@@ -400,4 +403,21 @@ public class connectionController {
             }
         }
     }
+      public void updateStudentSession(String studentid, String session) {
+    String query = """ 
+            UPDATE studentaccount 
+            SET session = ? 
+            WHERE studentid = ?;
+        """;
+
+    try (Connection con = SQLconnection()){
+        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setString(1, session); //SET 'T' for loggedin, 'F' for loggedout
+            preparedStatement.setString(2, studentid);
+            preparedStatement.executeUpdate();
+        }
+    } catch (SQLException e) {
+        System.err.println("Error updating student session: " + e.getMessage());
+    }
+}
 }

@@ -4,12 +4,9 @@
  */
 package view;
 
+import control.loginController;
 import model.connectionController;
-import model.studentAccount;
-import model.adminAccount;
 
-import javax.swing.JOptionPane;
-import java.util.List;
 /**
  *
  * @author LordD
@@ -21,6 +18,9 @@ public class loginPage extends javax.swing.JFrame {
      */
     public loginPage() {
         initComponents();
+        connectionController conn = new connectionController();
+        // CONNECT TO DATABASE
+        conn.DBconnect();
         this.setLocationRelativeTo(null);
     }
 
@@ -136,19 +136,11 @@ public class loginPage extends javax.swing.JFrame {
         String username = txtUsername.getText();
         String password = txtPassword.getText();
         
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter your School ID or password.");
-            return;
-        }
-        // Student and Admin login
-        if (role.equals("Student")) {
-            studentLogin(username, password);
-        } else {
-            adminLogin(username, password);
-        } 
+        loginController control = new loginController();
+        control.handleLogin(role, username, password, this);   
     }//GEN-LAST:event_btnLoginActionPerformed
-    
-     private void studentLogin(String username, String password) {
+  
+  private void studentLogin(String username, String password) {
          
         connectionController CC = new connectionController();
         List<studentAccount> accounts = CC.fetchstudentaccount(); 
