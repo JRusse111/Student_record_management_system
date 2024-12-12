@@ -20,7 +20,7 @@ public class errorMessages {
     }
     public void existerrorMessage()
     {
-        JOptionPane.showMessageDialog(null, "SchoolID AlreadyExist", "Error Inserting Data", JOptionPane.OK_OPTION);
+        JOptionPane.showMessageDialog(null, "Already Exist", "Error : Data Exist", JOptionPane.OK_OPTION);
     }
     public int deleteconformation()
     {
@@ -32,4 +32,6 @@ public class errorMessages {
         int option = JOptionPane.showConfirmDialog(null,"Insert data?","Confirmation",JOptionPane.YES_NO_CANCEL_OPTION);
         return option;
     }
+    
+//    public void CASCARD DELETE CONFIRMATION
 }

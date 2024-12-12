@@ -16,7 +16,7 @@ public class studentCourse {
         return id;
     }
 
-    public String getCourse() {
+    public String getCoursename() {
         return course;
     }
     

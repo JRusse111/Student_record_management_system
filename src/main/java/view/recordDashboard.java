@@ -4,27 +4,27 @@
  */
 package view;
 
-import control.adminDashboardController;
+import control.recordDashboardController;
 import model.connectionController;
 import control.errorMessages;
 /**
- *
+ * //CHECK UPDATE BUTTON IF ALREADY EXIST
  * @author LordD
  */
-public class adminDashboard extends javax.swing.JFrame {
+public class recordDashboard extends javax.swing.JFrame {
     // TODO :: DO THE MAX(sectionid) where courseid
     /**
      * Creates new form adminDashboard
      */
-    public adminDashboard() {
+    public recordDashboard() {
         initComponents();
-        adminDashboardController adminDController = new adminDashboardController();
+        recordDashboardController adminDController = new recordDashboardController();
         connectionController conn = new connectionController();
         // CONNECT TO DATABASE
         conn.DBconnect();
         
-        adminDController .updateRecordTable(recordTable);
-        adminDController .updateCoursebox(courseCBox);
+        adminDController.updateRecordTable(recordTable);
+        adminDController.updateCoursebox(courseCBox);
 //        updateSectionbox();
     }
 
@@ -97,6 +97,8 @@ public class adminDashboard extends javax.swing.JFrame {
         });
         recordScrollTable.setViewportView(recordTable);
 
+        DetailPanel.setForeground(new java.awt.Color(255, 255, 255));
+
         addBTN.setText("ADD");
         addBTN.setMaximumSize(new java.awt.Dimension(75, 23));
         addBTN.setMinimumSize(new java.awt.Dimension(75, 23));
@@ -160,7 +162,7 @@ public class adminDashboard extends javax.swing.JFrame {
                         .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(DetailPanelLayout.createSequentialGroup()
                                 .addComponent(sectionLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
                                 .addComponent(courseLabel))
                             .addComponent(lastnameTField)
                             .addComponent(firstnameTField, javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,7 +175,7 @@ public class adminDashboard extends javax.swing.JFrame {
                                 .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(clearBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(deleteBTN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(studentRecordTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                            .addComponent(studentRecordTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(DetailPanelLayout.createSequentialGroup()
                                 .addComponent(sectionCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -305,7 +307,7 @@ public class adminDashboard extends javax.swing.JFrame {
 
     private void deleteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBTNActionPerformed
         errorMessages ErrorMessage = new errorMessages();
-        adminDashboardController adminDController = new adminDashboardController();
+        recordDashboardController adminDController = new recordDashboardController();
         if(isFormEmpty())
         {
             ErrorMessage.fillerrorMessage();
@@ -320,17 +322,17 @@ public class adminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_clearForm
 
     private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
-        adminDashboardController adminDController = new adminDashboardController();
+        recordDashboardController adminDController = new recordDashboardController();
         adminDController.addRecordtotable(idTField, firstnameTField, lastnameTField,recordTable,sectionCBox,courseCBox);
     }//GEN-LAST:event_addBTNActionPerformed
 
     private void searchBarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyReleased
-        adminDashboardController adminDController = new adminDashboardController();
+        recordDashboardController adminDController = new recordDashboardController();
         adminDController.searchBarfunction(recordTable,searchBar);
     }//GEN-LAST:event_searchBarKeyReleased
 
     private void recordTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recordTableMouseClicked
-        adminDashboardController adminDController = new adminDashboardController();
+        recordDashboardController adminDController = new recordDashboardController();
         adminDController.clickedTable(recordTable,  idTField, firstnameTField,  lastnameTField, courseCBox, sectionCBox);
 
     }//GEN-LAST:event_recordTableMouseClicked
@@ -350,12 +352,12 @@ public class adminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_leftBTNActionPerformed
 
     private void updateBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBTNActionPerformed
-        adminDashboardController adminDController = new adminDashboardController();
-        adminDController.udpateRecordintable(recordTable,idTField,firstnameTField,lastnameTField,sectionCBox,courseCBox);
+        recordDashboardController adminDController = new recordDashboardController();
+        adminDController.updateRecordintable(recordTable,idTField,firstnameTField,lastnameTField,sectionCBox,courseCBox);
     }//GEN-LAST:event_updateBTNActionPerformed
 
     private void courseCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_courseCBoxActionPerformed
-        adminDashboardController adminDController = new adminDashboardController();
+        recordDashboardController adminDController = new recordDashboardController();
         adminDController.sectionListcourse(courseCBox,sectionCBox);
     }//GEN-LAST:event_courseCBoxActionPerformed
   
