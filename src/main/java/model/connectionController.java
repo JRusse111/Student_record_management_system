@@ -151,11 +151,11 @@ public class connectionController {
             SELECT *
             FROM studentAccount;              
         """;
-    
+
         try (Connection con = SQLconnection();
          PreparedStatement preparedStatement = con.prepareStatement(query);
          ResultSet resultSet = preparedStatement.executeQuery()){
-        
+
             while(resultSet.next()){
                 studentAccount account = new studentAccount();
                 account.setId(resultSet.getInt("id"));
@@ -165,8 +165,8 @@ public class connectionController {
             }
         } catch(SQLException e){
             System.err.println("Error retrieving student accounts: " + e.getMessage());
-    }
-    return studentAccounts;
+        }
+        return studentAccounts;
     }
     
     public List<adminAccount> fetchadminaccount() {
@@ -193,9 +193,6 @@ public class connectionController {
         return admins;
     }
 
-    
-    public void insertIntoTable(String schoolId, String firstName, String lastName, int section, int course) {
-    //===============================
     public void insertIntorecordtotable(String schoolId, String firstName, String lastName, int section, int course) {
         String queryToRecord = """
             INSERT INTO studentrecord
@@ -403,21 +400,72 @@ public class connectionController {
             }
         }
     }
-      public void updateStudentSession(String studentid, String session) {
-    String query = """ 
-            UPDATE studentaccount 
-            SET session = ? 
-            WHERE studentid = ?;
+    // ============== loginpage
+    public void updateStudentsession(String studentid, String session) {
+        String query = """ 
+                UPDATE studentaccount 
+                SET session = ? 
+                WHERE studentid = ?;
         """;
 
-    try (Connection con = SQLconnection()){
-        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-            preparedStatement.setString(1, session); //SET 'T' for loggedin, 'F' for loggedout
-            preparedStatement.setString(2, studentid);
-            preparedStatement.executeUpdate();
+        try (Connection con = SQLconnection()){
+            try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+                preparedStatement.setString(1, session);
+                preparedStatement.setString(2, studentid);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error updating student session: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.err.println("Error updating student session: " + e.getMessage());
     }
-}
+    public void updateAdminsession(String studentid, String session){
+        String query = """ 
+                UPDATE adminaccount
+                SET session = ? 
+                WHERE studentid = ?;
+        """;
+        try (Connection con = SQLconnection()){
+            try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+                preparedStatement.setString(1, session);
+                preparedStatement.setString(2, studentid);
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error updating student session: " + e.getMessage());
+        }
+    }
+    
+    public studentRecord getSpecificstudent(String studentid)
+    {
+        String query = """
+                        SELECT sr.schoolid, sr.firstname, ss.sectionname, sc.course
+                        FROM studentrecord sr
+                        JOIN studentsection ss
+                            ON sr.section = ss.sectionnumber
+                            AND sr.course = ss.courseid
+                        JOIN studentcourse sc 
+                            ON sr.course = sc.id
+                        WHERE sr.schoolid = ?
+        """;
+        studentRecord sr = new studentRecord();
+        try (Connection con = SQLconnection()){
+            try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+                preparedStatement.setString(1, studentid);
+                System.out.println(studentid);
+                try(ResultSet resultSet = preparedStatement.executeQuery()) {
+        
+                while (resultSet.next()) {
+                        sr.setFirstname(resultSet.getString("firstname").toUpperCase());
+                        sr.setSchoolid(resultSet.getString("schoolid").toUpperCase());
+                        sr.setSection(resultSet.getString("sectionname").toUpperCase());
+                        sr.setCourse(resultSet.getString("course").toUpperCase());
+                    }
+                }   
+            }
+        } catch (SQLException e) {
+            System.err.println("Error updating student session: " + e.getMessage());
+        }
+        return sr;
+    }
+
 }

@@ -3,8 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
+
+import control.studentDashboardController;
 import model.connectionController;
-import control.loginController;
+
 /**
  *
  * @author LordD
@@ -14,13 +16,10 @@ public class studentDashboard extends javax.swing.JFrame {
     /**
      * Creates new form studentDashboard
      */
-    private String studentid;   
-    public studentDashboard() {
+    public studentDashboard(String username) {
         initComponents();
-        connectionController conn = new connectionController();
-        // CONNECT TO DATABASE
-        conn.DBconnect();
         this.setLocationRelativeTo(null);
+        setStudentDetails(username);
     }
 
     /**
@@ -133,53 +132,20 @@ public class studentDashboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void setStudentDetails(String name, String schoolId, String course, String section) {
-        this.lblName.setText("HELLO " + name);
-        this.lblSchoolid.setText("ID: " + schoolId);
-        this.lblCourse.setText("Course: " + course);
-        this.lblSection.setText("Section: " + section);
+    public void setStudentDetails(String username) {
+        studentDashboardController sDC = new studentDashboardController();
+        sDC.getStudentinformation(username, lblName, lblSchoolid, lblCourse, lblSection);
     }
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
-        loginController controller = new loginController();
-        controller.handleLogout(studentid, this);
+        connectionController CC = new connectionController();
+        
+        loginPage loginpage = new loginPage();
+        loginpage.setLocationRelativeTo(null);
+        loginpage.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(studentDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(studentDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(studentDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(studentDashboard.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new studentDashboard().setVisible(true);
-            }
-        });
-    }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogout;
     private javax.swing.JPanel jPanel1;

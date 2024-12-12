@@ -3,10 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
-
 import control.loginController;
-import model.connectionController;
 
+
+import javax.swing.JOptionPane;
 /**
  *
  * @author LordD
@@ -18,9 +18,6 @@ public class loginPage extends javax.swing.JFrame {
      */
     public loginPage() {
         initComponents();
-        connectionController conn = new connectionController();
-        // CONNECT TO DATABASE
-        conn.DBconnect();
         this.setLocationRelativeTo(null);
     }
 
@@ -53,7 +50,7 @@ public class loginPage extends javax.swing.JFrame {
         jLabel2.setText("Continue as");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel3.setText("Username");
+        jLabel3.setText("STUDENT ID");
 
         txtUsername.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
 
@@ -67,14 +64,9 @@ public class loginPage extends javax.swing.JFrame {
 
         roleVerify.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         roleVerify.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Student", "Admin" }));
-        roleVerify.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                roleVerifyActionPerformed(evt);
-            }
-        });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel4.setText("Password");
+        jLabel4.setText("Firstname");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jLabel5.setText("Please enter login details below");
@@ -126,73 +118,36 @@ public class loginPage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void roleVerifyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roleVerifyActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_roleVerifyActionPerformed
-
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
+        int loginType = 0;
+        
         String role = (String) roleVerify.getSelectedItem();
         String username = txtUsername.getText();
         String password = txtPassword.getText();
         
         loginController control = new loginController();
-        control.handleLogin(role, username, password, this);   
+        loginType = control.handleLogin(role, username, password);   
+        
+        switch (loginType)
+        {
+            case 1 -> {
+                studentDashboard studentDashboard = new studentDashboard(username);
+                studentDashboard.setLocationRelativeTo(null);
+                studentDashboard.setVisible(true);
+                this.dispose();
+            }
+            case 2 -> {
+                adminHomeDashboard adminHomeDashboard = new adminHomeDashboard();
+                adminHomeDashboard.setLocationRelativeTo(null);
+                adminHomeDashboard.setVisible(true);
+                this.dispose();
+            }
+            case 3 -> JOptionPane.showMessageDialog(null, "Please enter your School ID or password.");
+            default -> JOptionPane.showMessageDialog(null, "Invalid credentials. Please try again.");
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
-  
-  private void studentLogin(String username, String password) {
-         
-        connectionController CC = new connectionController();
-        List<studentAccount> accounts = CC.fetchstudentaccount(); 
-        boolean isVerified = false;
-        
-        
-        for (studentAccount account : accounts) {
-            System.out.println(account.getSchoolid() + " : " + username +account.getSchoolid().equals(username)+"|"+account.getLastname() +" : " +password +account.getLastname().equals(password));
-            if (account.getSchoolid().equals(username) && account.getLastname().equals(password)) {
-                isVerified = true;
-                break;
-            }
-        }
-        if (isVerified) {
-            JOptionPane.showMessageDialog(this, "Login Successful!");
-//            recordDashboard adminDashboard = new recordDashboard();
-//            adminDashboard.setLocationRelativeTo(null);
-//            adminDashboard.setVisible(true);
-            studentDashboard studentdashboard = new studentDashboard();
-            studentdashboard.setLocationRelativeTo(null);
-            studentdashboard.setVisible(true);
-            this.dispose();
-        } else{
-            JOptionPane.showMessageDialog(this, "Invalid Usernamme or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-     
-    private void adminLogin(String username, String password) {
+
     
-        connectionController CC = new connectionController();
-        List<adminAccount> admins = CC.fetchadminaccount(); 
-        boolean isVerified = false;
-
-        for (adminAccount admin : admins) {
-            System.out.println(admin.getFirstname() + " : " + username + admin.getLastname().equals(username) + "|" +admin.getLastname() + " : " + password + admin.getLastname().equals(password));
-            if (admin.getFirstname().equals(username) && admin.getLastname().equals(password)) {
-            isVerified = true;
-            break;
-            }
-        }
-
-        if (isVerified) {
-            JOptionPane.showMessageDialog(this, "Admin Login Successful!");
-            adminHomeDashboard adminhomedashboard = new adminHomeDashboard();
-            adminhomedashboard.setLocationRelativeTo(null);
-            adminhomedashboard.setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, "Invalid Username or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JLabel jLabel1;
