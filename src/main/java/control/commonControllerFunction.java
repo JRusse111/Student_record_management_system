@@ -3,15 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package control;
-import javax.swing.JTextField;
+
 /**
  *
  * @author LordD
  */
-public class dashboardController {
+public class commonControllerFunction {
     
-    public void TFieldActionPerformed(JTextField textfield)
-    {
-        textfield.setText("");
-    }
 }

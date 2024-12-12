@@ -12,13 +12,31 @@ public class studentSection {
     private int id;
     private String sectionname;
     private int sectionnumber;
-    private String courseid;
+    private int courseid;
+    private String coursename;
+    private char status;
+
+    public void setStatus(char status) {
+        this.status = status;
+    }
+
+    public char getStatus() {
+        return status;
+    }
+    
+    public void setCoursename(String coursename) {
+        this.coursename = coursename;
+    }
+
+    public String getCoursename() {
+        return coursename;
+    }
 
     public void setSectionnumber(int sectionnumber) {
         this.sectionnumber = sectionnumber;
     }
 
-    public void setCourseid(String courseid) {
+    public void setCourseid(int courseid) {
         this.courseid = courseid;
     }
 
@@ -26,7 +44,7 @@ public class studentSection {
         return sectionnumber;
     }
 
-    public String getCourseid() {
+    public int getCourseid() {
         return courseid;
     }
 

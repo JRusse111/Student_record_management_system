@@ -10,7 +10,6 @@ package model;
  */
 public class studentRecord {
     private int id;
-
     private String schoolid;
     private String firstname;
     private String lastname;

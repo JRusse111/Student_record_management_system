@@ -139,6 +139,59 @@ public class loginPage extends javax.swing.JFrame {
         loginController control = new loginController();
         control.handleLogin(role, username, password, this);   
     }//GEN-LAST:event_btnLoginActionPerformed
+  
+  private void studentLogin(String username, String password) {
+         
+        connectionController CC = new connectionController();
+        List<studentAccount> accounts = CC.fetchstudentaccount(); 
+        boolean isVerified = false;
+        
+        
+        for (studentAccount account : accounts) {
+            System.out.println(account.getSchoolid() + " : " + username +account.getSchoolid().equals(username)+"|"+account.getLastname() +" : " +password +account.getLastname().equals(password));
+            if (account.getSchoolid().equals(username) && account.getLastname().equals(password)) {
+                isVerified = true;
+                break;
+            }
+        }
+        if (isVerified) {
+            JOptionPane.showMessageDialog(this, "Login Successful!");
+//            recordDashboard adminDashboard = new recordDashboard();
+//            adminDashboard.setLocationRelativeTo(null);
+//            adminDashboard.setVisible(true);
+            studentDashboard studentdashboard = new studentDashboard();
+            studentdashboard.setLocationRelativeTo(null);
+            studentdashboard.setVisible(true);
+            this.dispose();
+        } else{
+            JOptionPane.showMessageDialog(this, "Invalid Usernamme or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+     
+    private void adminLogin(String username, String password) {
+    
+        connectionController CC = new connectionController();
+        List<adminAccount> admins = CC.fetchadminaccount(); 
+        boolean isVerified = false;
+
+        for (adminAccount admin : admins) {
+            System.out.println(admin.getFirstname() + " : " + username + admin.getLastname().equals(username) + "|" +admin.getLastname() + " : " + password + admin.getLastname().equals(password));
+            if (admin.getFirstname().equals(username) && admin.getLastname().equals(password)) {
+            isVerified = true;
+            break;
+            }
+        }
+
+        if (isVerified) {
+            JOptionPane.showMessageDialog(this, "Admin Login Successful!");
+            adminHomeDashboard adminhomedashboard = new adminHomeDashboard();
+            adminhomedashboard.setLocationRelativeTo(null);
+            adminhomedashboard.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid Username or Password.", "Login Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;

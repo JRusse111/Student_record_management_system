@@ -4,14 +4,7 @@
  */
 package view;
 
-import model.connectionController;
-import java.util.List;
-import javax.swing.RowFilter;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
-import model.studentCourse;
-import model.studentSection;
+import control.sectionDashboardController;
 
 /**
  *
@@ -23,9 +16,10 @@ public class sectionDashboard extends javax.swing.JFrame {
      * Creates new form sectionDashboard
      */
     public sectionDashboard() {
+        sectionDashboardController sectionDC = new sectionDashboardController();
         initComponents();
-        updateTable();
-        updateCoursebox();
+        sectionDC.updateSectiontable(sectionTable);
+        sectionDC.updateCoursebox(courseCBox);
     }
 
     /**
@@ -39,17 +33,20 @@ public class sectionDashboard extends javax.swing.JFrame {
 
         Background = new javax.swing.JPanel();
         recordScrollTable = new javax.swing.JScrollPane();
-        recordTable = new javax.swing.JTable();
+        sectionTable = new javax.swing.JTable();
         DetailPanel = new javax.swing.JPanel();
         addBTN = new javax.swing.JButton();
-        deleteBTN = new javax.swing.JButton();
         updateBTN = new javax.swing.JButton();
         clearBTN = new javax.swing.JButton();
-        idTField = new javax.swing.JTextField();
+        sectionTField = new javax.swing.JTextField();
         courseCBox = new javax.swing.JComboBox<>();
         insertIdLabel = new javax.swing.JLabel();
         courseLabel = new javax.swing.JLabel();
         studentRecordTitle = new javax.swing.JLabel();
+        sectionNumLabel = new javax.swing.JLabel();
+        sectionNum = new javax.swing.JLabel();
+        sectionIDLabel = new javax.swing.JLabel();
+        sectionId = new javax.swing.JLabel();
         searchBar = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         leftBTN = new javax.swing.JButton();
@@ -58,22 +55,22 @@ public class sectionDashboard extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        recordTable.setModel(new javax.swing.table.DefaultTableModel(
+        sectionTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Section Name", "Section Number", "Course"
+                "id", "Course", "Section Number", "Section"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -84,12 +81,12 @@ public class sectionDashboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        recordTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        sectionTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                recordTableMouseClicked(evt);
+                sectionTableMouseClicked(evt);
             }
         });
-        recordScrollTable.setViewportView(recordTable);
+        recordScrollTable.setViewportView(sectionTable);
 
         addBTN.setText("ADD");
         addBTN.setMaximumSize(new java.awt.Dimension(75, 23));
@@ -100,14 +97,12 @@ public class sectionDashboard extends javax.swing.JFrame {
             }
         });
 
-        deleteBTN.setText("DELETE");
-        deleteBTN.addActionListener(new java.awt.event.ActionListener() {
+        updateBTN.setText("UPDATE");
+        updateBTN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteBTNActionPerformed(evt);
+                updateBTNActionPerformed(evt);
             }
         });
-
-        updateBTN.setText("UPDATE");
 
         clearBTN.setText("CLEAR");
         clearBTN.addActionListener(new java.awt.event.ActionListener() {
@@ -116,12 +111,26 @@ public class sectionDashboard extends javax.swing.JFrame {
             }
         });
 
-        insertIdLabel.setText("INSERT SECTION");
+        courseCBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                courseCBoxActionPerformed(evt);
+            }
+        });
+
+        insertIdLabel.setText("INSERT SECTION :");
 
         courseLabel.setText("COURSE");
 
         studentRecordTitle.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         studentRecordTitle.setText("SECTION");
+
+        sectionNumLabel.setText("Section Number: ");
+
+        sectionNum.setText("0");
+
+        sectionIDLabel.setText("ID :");
+
+        sectionId.setText("0");
 
         javax.swing.GroupLayout DetailPanelLayout = new javax.swing.GroupLayout(DetailPanel);
         DetailPanel.setLayout(DetailPanelLayout);
@@ -131,50 +140,65 @@ public class sectionDashboard extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(DetailPanelLayout.createSequentialGroup()
-                        .addComponent(courseLabel)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(DetailPanelLayout.createSequentialGroup()
-                        .addComponent(courseCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(insertIdLabel)
+                        .addContainerGap())
+                    .addComponent(sectionTField, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DetailPanelLayout.createSequentialGroup()
                         .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(DetailPanelLayout.createSequentialGroup()
                                 .addComponent(addBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(deleteBTN))
-                            .addComponent(idTField)
-                            .addComponent(studentRecordTitle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, DetailPanelLayout.createSequentialGroup()
-                                .addComponent(insertIdLabel)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(updateBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(DetailPanelLayout.createSequentialGroup()
-                                .addComponent(updateBTN, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(56, 56, 56)
-                                .addComponent(clearBTN)))
-                        .addGap(31, 31, 31))))
+                                .addComponent(clearBTN, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                                .addGap(128, 128, 128))
+                            .addComponent(studentRecordTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, DetailPanelLayout.createSequentialGroup()
+                                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(courseLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(courseCBox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(31, 31, 31))
+                    .addGroup(DetailPanelLayout.createSequentialGroup()
+                        .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(DetailPanelLayout.createSequentialGroup()
+                                .addComponent(sectionNumLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sectionNum, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(DetailPanelLayout.createSequentialGroup()
+                                .addComponent(sectionIDLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sectionId)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         DetailPanelLayout.setVerticalGroup(
             DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, DetailPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addComponent(studentRecordTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sectionIDLabel)
+                    .addComponent(sectionId))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sectionNumLabel)
+                    .addComponent(sectionNum))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(insertIdLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(idTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(sectionTField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(courseLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(courseCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addBTN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deleteBTN))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(DetailPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(updateBTN)
-                    .addComponent(clearBTN))
-                .addContainerGap(226, Short.MAX_VALUE))
+                    .addComponent(updateBTN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(clearBTN)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         searchBar.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -259,95 +283,24 @@ public class sectionDashboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void recordTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_recordTableMouseClicked
-//        int selectedRow = recordTable.getSelectedRow();
-//        if(selectedRow != -1){
-//            idTField.setText((String) recordTable.getValueAt(selectedRow,0));
-//            firstnameTField.setText((String) recordTable.getValueAt(selectedRow,1));
-//            lastnameTField.setText((String) recordTable.getValueAt(selectedRow, 2));
-//            String selectedSection = (String) recordTable.getValueAt(selectedRow, 3);
-//            String selectedCourse = (String) recordTable.getValueAt(selectedRow, 4);
-//            for (int i = 0; i < courseCBox.getItemCount(); i++) {
-//                if (courseCBox.getItemAt(i).equals(selectedCourse)) {
-//                    courseCBox.setSelectedIndex(i);
-//                    break;
-//                }
-//            }
-//            for (int i = 0; i < sectionCBox.getItemCount(); i++) {
-//                //                System.out.println(sectionCBox.getItemAt(i) + " | " + selectedSection);
-//                if (sectionCBox.getItemAt(i).equals(selectedSection)) {
-//                    sectionCBox.setSelectedIndex(i);
-//                    break;
-//                }
-//            }
-//        }
-    }//GEN-LAST:event_recordTableMouseClicked
+    private void sectionTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sectionTableMouseClicked
+        sectionDashboardController sectionDC = new sectionDashboardController();
+        sectionDC.clickedTable(sectionTable,sectionTField,sectionNum, courseCBox , sectionId);
+    }//GEN-LAST:event_sectionTableMouseClicked
 
     private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
-        //CHECK IF EMTY
-//        if(isFormEmpty())
-//        {
-//            fillerrorMessage();
-//            return;
-//        }
-//        connectionController CC = new connectionController();
-//        List<studentRecord> records = CC.fetchrecordtable("T");
-//        boolean exists = false;
-//
-//        for (studentRecord record : records) {
-//            if (record.getSchoolid().equals(idTField.getText())) {
-//                exists = true;
-//                break;
-//            }
-//        }
-//
-//        if (exists) {
-//            //            System.out.println("ERROR");
-//            existerrorMessage();
-//        } else {
-//            if(0 == confirmationMessage()){
-//                CC.insertIntoTable(idTField.getText(),
-//                    firstnameTField.getText(),
-//                    lastnameTField.getText(),
-//                    sectionCBox.getSelectedIndex(),
-//                    courseCBox.getSelectedIndex()
-//                );
-//            }
-//            clearForm();
-//        }
-//        updateTable();
+        sectionDashboardController sectionDashboardController = new sectionDashboardController();
+        sectionDashboardController.addSectiontotable(sectionTField, courseCBox, sectionTable);
+        clearForm();
     }//GEN-LAST:event_addBTNActionPerformed
 
-    private void deleteBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBTNActionPerformed
-//        if(isFormEmpty())
-//        {
-//            fillerrorMessage();
-//            return;
-//        }
-//        connectionController CC = new connectionController();
-//        int selectedRow = recordTable.getSelectedRow();
-//        if(selectedRow != -1 && 0 == deleteconformation()){
-//            String studentId = (String) recordTable.getValueAt(selectedRow,0);
-//            CC.removeFromtable(studentId);
-//        }
-//        updateTable();
-    }//GEN-LAST:event_deleteBTNActionPerformed
-
     private void clearBTNclearForm(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearBTNclearForm
-//        clearForm();
+        clearForm();
     }//GEN-LAST:event_clearBTNclearForm
 
     private void searchBarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyReleased
-        DefaultTableModel dTable = (DefaultTableModel) recordTable.getModel();
-        String text = searchBar.getText();
-        TableRowSorter<TableModel> sorter = new TableRowSorter<>(dTable);
-        recordTable.setRowSorter(sorter);
-
-        if (text.trim().length() == 0) {
-            sorter.setRowFilter(null);
-        } else {
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-        }
+        sectionDashboardController sectionDashboardController = new sectionDashboardController();
+        sectionDashboardController.searchBar(searchBar, sectionTable);
     }//GEN-LAST:event_searchBarKeyReleased
 
     private void rightBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightBTNActionPerformed
@@ -358,36 +311,27 @@ public class sectionDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_rightBTNActionPerformed
 
     private void leftBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftBTNActionPerformed
-        adminDashboard adminDashboard = new adminDashboard();
+        recordDashboard adminDashboard = new recordDashboard();
         adminDashboard.setVisible(true);
         adminDashboard.setLocationRelativeTo(null);
         this.dispose();
     }//GEN-LAST:event_leftBTNActionPerformed
 
-    public void updateTable()
-    {
-        DefaultTableModel dTable = (DefaultTableModel) recordTable.getModel();
-        dTable.setRowCount(0);
-        connectionController CC = new connectionController();
+    private void updateBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBTNActionPerformed
+        sectionDashboardController sectionDC = new sectionDashboardController();
+        sectionDC.updateSectiontable(sectionTable, sectionTField, sectionId, courseCBox);
+        clearForm();
+    }//GEN-LAST:event_updateBTNActionPerformed
 
-        List<studentSection> sections = CC.fetchstudentsection();
-        for(studentSection section : sections)
-        {
-            String courseid = section.getCourseid();
-            int sectionNum = section.getSectionnumber();
-            String sectionname = section.getSectionname();
-            dTable.addRow(new Object[] {courseid, sectionNum,sectionname});
-        }
-    }
-    public void updateCoursebox()
-    {
-        connectionController CC = new connectionController();
-        List<studentCourse> courses = CC.fetchstudentcourse();
+    private void courseCBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_courseCBoxActionPerformed
         
-        for(studentCourse course : courses)
-        {
-            courseCBox.addItem(course.getCourse());
-        }
+    }//GEN-LAST:event_courseCBoxActionPerformed
+
+    private void clearForm()
+    {
+        sectionTField.setText("");
+        sectionNum.setText("");
+        courseCBox.setSelectedIndex(0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -397,15 +341,18 @@ public class sectionDashboard extends javax.swing.JFrame {
     private javax.swing.JButton clearBTN;
     private javax.swing.JComboBox<String> courseCBox;
     private javax.swing.JLabel courseLabel;
-    private javax.swing.JButton deleteBTN;
-    private javax.swing.JTextField idTField;
     private javax.swing.JLabel insertIdLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton leftBTN;
     private javax.swing.JScrollPane recordScrollTable;
-    private javax.swing.JTable recordTable;
     private javax.swing.JButton rightBTN;
     private javax.swing.JTextField searchBar;
+    private javax.swing.JLabel sectionIDLabel;
+    private javax.swing.JLabel sectionId;
+    private javax.swing.JLabel sectionNum;
+    private javax.swing.JLabel sectionNumLabel;
+    private javax.swing.JTextField sectionTField;
+    private javax.swing.JTable sectionTable;
     private javax.swing.JLabel selectionLabel;
     private javax.swing.JLabel studentRecordTitle;
     private javax.swing.JButton updateBTN;

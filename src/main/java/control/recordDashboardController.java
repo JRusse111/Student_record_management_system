@@ -18,10 +18,10 @@ import model.studentRecord;
 import model.studentSection;
 
 /**
- *
+ * //CHECK UPDATE BUTTON IF ALREADY EXIST
  * @author LordD
  */
-public class adminDashboardController {
+public class recordDashboardController {
     
     // BUTTON FUNCTIONS
     public void deleteRecordfromtable(javax.swing.JTable recordTable, errorMessages ErrorMessage)
@@ -30,7 +30,7 @@ public class adminDashboardController {
         int selectedRow = recordTable.getSelectedRow();
         if(selectedRow != -1 && 0 == ErrorMessage.deleteconformation()){
             String studentId = (String) recordTable.getValueAt(selectedRow,1);
-            CC.removeFromtable(studentId);
+            CC.removeFromrecordtable(studentId);
         }
         updateRecordTable(recordTable);
     }
@@ -56,7 +56,7 @@ public class adminDashboardController {
             ErrorMessage.existerrorMessage();
         } else {
             if(0 == ErrorMessage.confirmationMessage()){
-                CC.insertIntoTable(
+                CC.insertIntorecordtotable(
                         idTField.getText(), 
                         firstnameTField.getText(), 
                         lastnameTField.getText(),
@@ -72,10 +72,11 @@ public class adminDashboardController {
         }
         updateRecordTable(recordTable);
     }
-    public void udpateRecordintable(javax.swing.JTable recordTable, javax.swing.JTextField idTField, javax.swing.JTextField firstnameTField, javax.swing.JTextField lastnameTField,
+    public void updateRecordintable(javax.swing.JTable recordTable, javax.swing.JTextField idTField, javax.swing.JTextField firstnameTField, javax.swing.JTextField lastnameTField,
                                     javax.swing.JComboBox<String> sectionCBox,javax.swing.JComboBox<String> courseCBox
     )
     {
+        //CHECK UPDATE BUTTON IF ALREADY EXIST
         connectionController CC = new connectionController();
         int selectedRow = recordTable.getSelectedRow();
         if(selectedRow != -1){
@@ -153,13 +154,13 @@ public class adminDashboardController {
     public void sectionListcourse(javax.swing.JComboBox<String> courseCBox, javax.swing.JComboBox<String> sectionCBox)
     {
         connectionController CC = new connectionController();
-        List<studentCourse> courses = CC.fetchstudentcourse();
+        List<studentCourse> courses = CC.fetchstudentcourse("T");
         String itemCoursebox = courseCBox.getItemAt(courseCBox.getSelectedIndex());
         for(studentCourse course : courses)
         {
-//            System.out.println(course.getCourse() + " | " + itemCoursebox);
-            if(course.getCourse().equals(itemCoursebox))
+            if(course.getCoursename().equals(itemCoursebox))
             {
+                System.out.println(course.getCoursename() + " | " + itemCoursebox);
                 updateSectionbox(course.getId(),sectionCBox);
             }
         }
@@ -169,10 +170,10 @@ public class adminDashboardController {
     public void updateCoursebox(javax.swing.JComboBox<String> courseCBox)
     {
         connectionController CC = new connectionController();
-        List<studentCourse> courses = CC.fetchstudentcourse();
+        List<studentCourse> courses = CC.fetchstudentcourse("T");
         for(studentCourse course : courses)
         {
-            courseCBox.addItem(course.getCourse());
+            courseCBox.addItem(course.getCoursename());
         }
     }
    
@@ -180,11 +181,10 @@ public class adminDashboardController {
     {
         sectionCBox.removeAllItems();
         connectionController CC = new connectionController();
-        List<studentSection> sections = CC.fetchstudentsection();
+        List<studentSection> sections = CC.fetchstudentsection("T");
         for(studentSection section : sections)
         {
-//            System.out.println(courseid);
-            if(courseid == section.getSectionnumber())
+            if(courseid == section.getCourseid())
             {
                 sectionCBox.addItem(section.getSectionname());
             }
@@ -194,12 +194,12 @@ public class adminDashboardController {
     public int getIndexCourse(javax.swing.JComboBox<String> courseCBox)
     {
         connectionController CC = new connectionController();
-        List<studentCourse> courses = CC.fetchstudentcourse();
+        List<studentCourse> courses = CC.fetchstudentcourse("T");
         String courseBox = courseCBox.getItemAt(courseCBox.getSelectedIndex());
         System.out.println("get index course: " + courseBox);
         for(studentCourse course: courses)
         {
-            if(course.getCourse().equals(courseBox))
+            if(course.getCoursename().equals(courseBox))
             {
                 return course.getId();
             }
@@ -209,7 +209,7 @@ public class adminDashboardController {
     public int getIndexSection(javax.swing.JComboBox<String> sectionCBox)
     {
         connectionController CC = new connectionController();
-        List<studentSection> sections = CC.fetchstudentsection();
+        List<studentSection> sections = CC.fetchstudentsection("T");
         String sectionBox = sectionCBox.getItemAt(sectionCBox.getSelectedIndex());
         System.out.println("get index section:" + sectionBox);
         for(studentSection section: sections)
