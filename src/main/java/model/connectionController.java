@@ -193,6 +193,21 @@ public class connectionController {
         return admins;
     }
 
+<<<<<<< HEAD
+=======
+    
+    public void insertIntoTable(String schoolId, String firstName, String lastName, int section, int course) {
+    //===============================
+
+    /**
+     *
+     * @param schoolId
+     * @param firstName
+     * @param lastName
+     * @param section
+     * @param course
+     */
+>>>>>>> c994726772fbab5713682f60aba7f22154cdbe24
     public void insertIntorecordtotable(String schoolId, String firstName, String lastName, int section, int course) {
         String queryToRecord = """
             INSERT INTO studentrecord
