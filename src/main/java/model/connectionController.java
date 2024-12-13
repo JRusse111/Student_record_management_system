@@ -196,6 +196,15 @@ public class connectionController {
     
     public void insertIntoTable(String schoolId, String firstName, String lastName, int section, int course) {
     //===============================
+
+    /**
+     *
+     * @param schoolId
+     * @param firstName
+     * @param lastName
+     * @param section
+     * @param course
+     */
     public void insertIntorecordtotable(String schoolId, String firstName, String lastName, int section, int course) {
         String queryToRecord = """
             INSERT INTO studentrecord
